@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fase 5</title>
+    <link rel="stylesheet" href="css/styles5.css">
+</head>
+<body style="
+    /* 1. Zoomiamo l'immagine per dargli aria ai lati */
+    background-size: 150%; 
+    /* 2. Fissiamo l'immagine in BASSO così i personaggi non spariscono sotto il bordo */
+    background-position: center bottom; 
+    background-attachment: fixed; 
+    background-repeat: no-repeat;
+    background-color: #000;
+    margin: 0; 
+    padding: 0;
+">
+<div style="display: flex; justify-content: flex-start; align-items: flex-start; gap: 20px; margin: 0 auto; padding: 15px; width: 98%;">
+    
+     <div style="display: flex; justify-content: center; align-items: stretch; gap: 2vw; margin: 0 auto; width: 98%; padding-left: 5vw; padding-top: 20px;">
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; flex-shrink: 0;">
+        <script>
+            for(let i=1; i<=4; i++) {
+                document.write(`
+                    <div style="text-align: center; background: #1a1a1a; border: 0.3vw solid #ffcc00; padding: 1.5vh 1vw; border-radius: 1vw; width: 17vw; min-width: 220px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5);">
+                        
+                        <div style="width: 100%;">
+                            <input type="text" id="nomeG${i}" oninput="salvaNomi()" placeholder="NOME G${i}..." style="width: 90%; background: #222; color: #ffcc00; border: 1px solid #444; text-align: center; font-weight: bold; text-transform: uppercase; border-radius: 5px; padding: 8px; font-size: clamp(20px, 1.8vw, 36px);">
+                        </div>
+                        
+                        <div id="punti${i}" style="font-size: clamp(50px, 6vw, 100px); color: #ffcc00; font-weight: bold; margin: 1vh 0;">0</div>
+                        
+                        <div style="width: 100%;">
+                            <div style="color: #aaa; font-size: clamp(10px, 0.7vw, 16px); margin-bottom: 2px; letter-spacing: 2px;">VALORE</div>
+                            <input type="number" id="val${i}" value="100" style="width: 5vw; min-width: 70px; font-size: clamp(18px, 1.3vw, 30px); text-align: center; margin-bottom: 10px; border-radius: 5px; border: 1px solid #444; background: white;">
+                            
+                            <div style="display: flex; justify-content: center; gap: 0.8vw;">
+                                <button onclick="modificaPunti(${i}, 'piu')" style="background: #28a745; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">+</button>
+                                <button onclick="modificaPunti(${i}, 'meno')" style="background: #dc3545; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">-</button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        </script>
+    </div> 
+
+<div style="background: #1a1a1a; border: 0.3vw solid #ffcc00; border-radius: 1vw; padding: 1.5vw; flex-grow: 1; font-family: sans-serif; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; margin-right: 2vw;">
+        <div style="color: #ffcc00; font-size: clamp(22px, 2.2vw, 45px); font-weight: bold; text-align: center; margin-bottom: 2vh; border-bottom: 0.2vw solid #ffcc00; text-transform: uppercase; padding-bottom: 1vh;">
+            Classifica Spettatori
+        </div>
+        
+        <table style="width: 100%; color: white; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+                <tr style="font-size: clamp(20px, 1.8vw, 32px); border-bottom: 3px solid #444; color: #bbb; text-transform: uppercase; letter-spacing: 1px;">
+                    <th style="text-align: left; padding: 1.5vh 1vh; width: 35%;">NOME SPETTATORE</th>
+                    <th style="text-align: center; width: 15%;">PUNTI</th>
+                    <th style="text-align: center; width: 15%;">VALORE</th>
+                    <th style="text-align: center; width: 35%;"><a href="trappola.html">SFIDA</a></th> 
+                    <th style="text-align: right; padding-right: 1.5vw; width: 23%;">AZIONE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    for(let i=1; i<=7; i++) {
+                        document.write(`
+                            <tr style="border-bottom: 1px solid #333;">
+                                <td style="padding: 1.2vh 0.5vw;">
+                                    <input type="text" id="nomeS${i}" oninput="salvaNomi()" placeholder="Nome..." style="width: 95%; background: #222; color: white; border: 1px solid #444; padding: 0.8vh; font-weight: 900; border-radius: 0.3vw; font-size: clamp(18px, 1.6vw, 36px);">
+                                </td>
+                                <td id="puntiS${i}" style="text-align: center; font-weight: bold; color: #ffcc00; font-size: clamp(30px, 3.2vw, 65px); line-height: 1.2;">0</td>
+                                <td style="text-align: center;">
+                                    <input type="number" id="valS${i}" value="100" style="width: 70%; max-width: 100px; font-size: clamp(16px, 1.2vw, 26px); text-align: center; padding: 0.5vh; border-radius: 0.3vw; border: 1px solid #444; background: white; color: black;">
+                                </td>
+                               <td style="text-align: center;">
+    <div style="display: flex; justify-content: center; gap: 1vw; padding: 5px 0; flex-wrap: wrap;">
+        <span onclick="this.style.opacity='0.2'; this.style.filter='grayscale(1) shadow(0 0 0 transparent)';" 
+                                          style="font-size: clamp(35px, 3.5vw, 65px); cursor: pointer; filter: drop-shadow(0 0 10px red); display: inline-block; transition: all 0.3s; line-height: 1;">
+                                        ⚠️
+                                    </span>
+        <span onclick="this.style.opacity='0.2'; this.style.filter='grayscale(1) shadow(0 0 0 transparent)';" 
+                                          style="font-size: clamp(35px, 3.5vw, 65px); cursor: pointer; filter: drop-shadow(0 0 10px red); display: inline-block; transition: all 0.3s; line-height: 1;">
+                                        🔥
+                                    </span>
+        <span onclick="this.style.opacity='0.2'; this.style.filter='grayscale(1) shadow(0 0 0 transparent)';" 
+                                          style="font-size: clamp(35px, 3.5vw, 65px); cursor: pointer; filter: drop-shadow(0 0 10px red); display: inline-block; transition: all 0.3s; line-height: 1;">
+                                        ☠️
+                                    </span>
+    </div>
+</td>
+                                <td style="text-align: right; padding: 1vh 1vw 1vh 0;">
+                                    <button onclick="modificaPuntiSpettatore(${i})" style="background: #28a745; color: white; border: none; padding: 1vh 0; cursor: pointer; font-weight: bold; font-size: clamp(14px, 1.1vw, 22px); border-radius: 0.5vw; width: 100%; max-width: 160px; transition: 0.2s;">
+                                        AGGIUNGI
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<div class="main-wrapper">
+    <div id="tabellone" class="container-labirinto"></div>
+
+    <div class="sidebar-destra">
+        <div class="box-stile legenda-box">
+            <h2 style="color: #ffcc00; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #ffcc00;">LEGENDA</h2>
+            <div id="area-legenda"></div>
+        </div>
+
+        <div class="box-stile giocatori-box">
+            <h2 style="color: #007bff; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #007bff;">PROGRESSO</h2>
+            <div id="area-progresso"></div>
+        </div>
+
+        <div class="box-stile dadi-box">
+            <h2 style="color: #007bff; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #007bff;">DADI</h2>
+            <div class="grid-dadi">
+                <button onclick="lanciaDado(4, this)" class="btn-dado">D4</button>
+                <button onclick="lanciaDado(6, this)" class="btn-dado">D6</button>
+                <button onclick="lanciaDado(8, this)" class="btn-dado">D8</button>
+                <button onclick="lanciaDado(10, this)" class="btn-dado">D10</button>
+                <button onclick="lanciaDado(12, this)" class="btn-dado">D12</button>
+                <button onclick="lanciaDado(20, this)" class="btn-dado">D20</button>
+            </div>
+            <div id="risultato-dado" style="font-size: 80px; color: #ffcc00; text-align: center; margin-top: 10px;">--</div>
+        </div>
+    </div>
+</div>
+
+<div id="quiz-overlay">
+    <div class="quiz-content">
+        <h1 id="categoria-titolo">CATEGORIA</h1>
+        <hr class="divider">
+        
+        <!-- TESTO DOMANDA -->
+        <p id="testo-domanda" style="margin-bottom: 10px;"></p>
+        
+        <!-- RECINTO PER L'IMMAGINE: impedisce il collasso -->
+        <div style="width: 100%; max-height: 50vh; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 15px;">
+            <img id="immagine-domanda" src="" 
+                 style="display:none; 
+                        max-width: 100%; 
+                        max-height: 50vh; 
+                        object-fit: contain; 
+                        border-radius: 8px; 
+                        border: 2px solid #ffcc00;">
+        </div>
+
+        <!-- AREA RISPOSTA -->
+        <div id="area-risposta" style="display:none; width: 100%; margin: 10px 0; font-weight: bold;"></div>
+
+        <div class="quiz-footer">
+            <button class="btn-mostra" onclick="mostraRisposta()">Mostra Risposta</button>
+            <button class="btn-chiudi" onclick="chiudiQuiz()">Chiudi</button>
+        </div>
+    </div>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<script>
+// --- 1. DATI E STATO INIZIALE ---
+// Carica punti, nomi E posizioni salvate
+let punteggi = JSON.parse(localStorage.getItem('puntiG')) || [0, 0, 0, 0];
+let puntiSpettatori = JSON.parse(localStorage.getItem('puntiS')) || [0, 0, 0, 0, 0, 0, 0];
+let nomiG = JSON.parse(localStorage.getItem('nomiG')) || ["", "", "", ""];
+let nomiS = JSON.parse(localStorage.getItem('nomiS')) || ["", "", "", "", "", "", ""];
+let posizioniAttuali = JSON.parse(localStorage.getItem('posTabellone')) || { 1: 1, 2: 1, 3: 1, 4: 1 };
+
+const categorie = [
+    { nome: 'BOSS', colore: '#ff0000', classe: 'cat-storia' },
+    { nome: 'SUONO', colore: '#007bff', classe: 'cat-boss' },
+    { nome: 'CARTA', colore: '#ffffff', classe: 'cat-oggetti' },
+    { nome: 'DETTAGLIO', colore: '#00ff00', classe: 'cat-mappe' },
+    { nome: 'LORE', colore: '#ff8800', classe: 'cat-lore' },
+    { nome: 'BONUS', colore: '#9900ff', classe: 'cat-bonus' }
+];
+
+const coloriPedine = {
+    1: '#333333', // Grigio scuro
+    2: '#00ffff', // Ciano
+    3: '#ff00ff', // Magenta
+    4: '#ccff00'  // Lime
+};
+
+const databaseDomande = {
+    // Casella 1: Categoria generica (mostrerà immagini/1.jpg)
+    1: { q: "Chi è questo personaggio?", a: "Makoto Yuki" }, 
+
+    // Casella 2: Categoria SUONO (riprodurrà audio/2.mp3)
+    2: { q: "", a: "Street Fighter", audio: "audio/sf.mp3" },
+
+    // Esempio con percorso personalizzato (se non vuoi usare i numeri)
+    3: { q: "Chi è il cane?", a: "Koromaru", img: "immagini/koro.jpg" },
+    
+    // Casella 4: Altro suono specifico
+    4: { q: "", a: "Your Name", img: "immagini/yn.PNG" },
+    5: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    6: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    7: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    8: { q: "", a: "Overwatch", audio: "audio/hanzo.mp3" },
+    9: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    10: { q: "", a: "La città Incantata", img: "immagini/incantata.PNG" },
+    11: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    12: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    13: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    14: { q: "", a: "Fortnite", audio: "audio/fortnite.mp3" },
+    15: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    16: { q: "", a: "Batman Arkham", img: "immagini/arkham.PNG" },
+    17: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    18: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    19: { q: "Cosa senti?", a: "Effetto Evoker", audio: "audio/evoker.mp3" },
+    20: { q: "", a: "Re:Zero", audio: "audio/zero.mp3" },
+    21: { q: "", a: "Re:Zero", audio: "audio/zero.mp3" },
+    22: { q: "", a: "Jujutsu Kaisen", img: "immagini/jj.PNG" },
+    23: { q: "", a: "Re:Zero", audio: "audio/zero.mp3" },
+    24: { q: "", a: "Re:Zero", audio: "audio/zero.mp3" },
+    25: { q: "", a: "Re:Zero", audio: "audio/zero.mp3" },
+    26: { q: "", a: "Dragonball", audio: "audio/tp.mp3" },
+    27: { q: "", a: "Dragonball", audio: "audio/tp.mp3" },
+    28: { q: "", a: "The Last of Us", img: "immagini/tlou2.PNG" },
+    29: { q: "", a: "Dragonball", audio: "audio/tp.mp3" },
+    30: { q: "", a: "Dragonball", audio: "audio/tp.mp3" },
+    31: { q: "", a: "Dragonball", audio: "audio/tp.mp3" },
+    32: { q: "", a: "Naruto", audio: "audio/naruto2.mp3" },
+    33: { q: "", a: "Naruto", audio: "audio/naruto2.mp3" },
+    34: { q: "", a: "Baldur's Gate 3", img: "immagini/bg3.PNG" },
+    35: { q: "", a: "Naruto", audio: "audio/naruto2.mp3" },
+    36: { q: "", a: "Naruto", audio: "audio/naruto2.mp3" },
+    37: { q: "", a: "Naruto", audio: "audio/naruto2.mp3" },
+    38: { q: "", a: "World of Warcraft", audio: "audio/wow2.mp3" },
+    39: { q: "", a: "World of Warcraft", audio: "audio/wow2.mp3" },
+    40: { q: "", a: "Ghost of Tsushima", img: "immagini/ghost.PNG" },
+    41: { q: "", a: "World of Warcraft", audio: "audio/wow2.mp3" },
+    42: { q: "", a: "World of Warcraft", audio: "audio/wow2.mp3" },
+    43: { q: "", a: "World of Warcraft", audio: "audio/wow2.mp3" },
+    44: { q: "", a: "One Piece", audio: "audio/op2.mp3" },
+    45: { q: "", a: "One Piece", audio: "audio/op2.mp3" },
+    46: { q: "", a: "Elden Ring", img: "immagini/ring.PNG" },
+    47: { q: "", a: "One Piece", audio: "audio/op2.mp3" },
+    48: { q: "", a: "One Piece", audio: "audio/op2.mp3" },
+    49: { q: "", a: "One Piece", audio: "audio/op2.mp3" },
+    50: { q: "", a: "GTA: San Andreas", audio: "audio/gta.mp3" },
+    51: { q: "", a: "GTA: San Andreas", audio: "audio/gta.mp3" },
+    52: { q: "", a: "Toradora", img: "immagini/toradora.PNG" },
+    53: { q: "", a: "GTA: San Andreas", audio: "audio/gta.mp3" },
+    54: { q: "", a: "GTA: San Andreas", audio: "audio/gta.mp3" },
+    55: { q: "", a: "GTA: San Andreas", audio: "audio/gta.mp3" },
+    56: { q: "", a: "Neon Genesis Evangelion", audio: "audio/asuka.mp3" },
+    57: { q: "", a: "Neon Genesis Evangelion", audio: "audio/asuka.mp3" },
+    58: { q: "", a: "Neon Genesis Evangelion", audio: "audio/asuka.mp3" },
+    59: { q: "", a: "Neon Genesis Evangelion", audio: "audio/asuka.mp3" },
+    60: { q: "", a: "Neon Genesis Evangelion", audio: "audio/asuka.mp3" },
+    61: { q: "", a: "Neon Genesis Evangelion", audio: "audio/asuka.mp3" },
+    62: { q: "", a: "Honkai Star Rail", audio: "audio/hsr.mp3" },
+    63: { q: "", a: "Honkai Star Rail", audio: "audio/hsr.mp3" },
+    64: { q: "", a: "Honkai Star Rail", audio: "audio/hsr.mp3" },
+    65: { q: "", a: "Honkai Star Rail", audio: "audio/hsr.mp3" },
+    66: { q: "", a: "Honkai Star Rail", audio: "audio/hsr.mp3" },
+    67: { q: "", a: "Honkai Star Rail", audio: "audio/hsr.mp3" },
+    68: { q: "", a: "Pokémon", audio: "audio/pkmn.mp3" },
+    69: { q: "", a: "Pokémon", audio: "audio/pkmn.mp3" },
+    70: { q: "", a: "Pokémon", audio: "audio/pkmn.mp3" },
+    71: { q: "", a: "Pokémon", audio: "audio/pkmn.mp3" },
+    72: { q: "", a: "Pokémon", audio: "audio/pkmn.mp3" },
+    73: { q: "", a: "Pokémon", audio: "audio/pkmn.mp3" },
+    74: { q: "", a: "Spiderman", audio: "audio/spider.mp3" },
+    75: { q: "", a: "Spiderman", audio: "audio/spider.mp3" },
+    76: { q: "", a: "Spiderman", audio: "audio/spider.mp3" },
+    77: { q: "", a: "Spiderman", audio: "audio/spider.mp3" },
+    78: { q: "", a: "Spiderman", audio: "audio/spider.mp3" },
+    79: { q: "", a: "Spiderman", audio: "audio/spider.mp3" },
+    80: { q: "", a: "My Hero Academia", audio: "audio/hero2.mp3" },
+    81: { q: "", a: "My Hero Academia", audio: "audio/hero2.mp3" },
+    82: { q: "", a: "My Hero Academia", audio: "audio/hero2.mp3" },
+    83: { q: "", a: "My Hero Academia", audio: "audio/hero2.mp3" },
+    84: { q: "", a: "My Hero Academia", audio: "audio/hero2.mp3" },
+    85: { q: "", a: "My Hero Academia", audio: "audio/hero2.mp3" },
+    86: { q: "", a: "Demon Slayer", audio: "audio/demon2.mp3" },
+    87: { q: "", a: "Demon Slayer", audio: "audio/demon2.mp3" },
+    88: { q: "", a: "Demon Slayer", audio: "audio/demon2.mp3" },
+    89: { q: "", a: "Demon Slayer", audio: "audio/demon2.mp3" },
+    90: { q: "", a: "Demon Slayer", audio: "audio/demon2.mp3" },
+    91: { q: "", a: "Demon Slayer", audio: "audio/demon2.mp3" },
+    92: { q: "", a: "Attack on Titan", audio: "audio/aot2.mp3" },
+    93: { q: "", a: "Attack on Titan", audio: "audio/aot2.mp3" },
+    94: { q: "", a: "Attack on Titan", audio: "audio/aot2.mp3" },
+    95: { q: "", a: "Attack on Titan", audio: "audio/aot2.mp3" },
+    96: { q: "", a: "Attack on Titan", audio: "audio/aot2.mp3" },
+    97: { q: "", a: "Attack on Titan", audio: "audio/aot2.mp3" },
+    98: { q: "", a: "Assassin's Creed", audio: "audio/ac2.mp3" },
+    
+};
+
+// --- 2. GENERAZIONE GRIGLIA ---
+const tabellone = document.getElementById('tabellone');
+const totaleCaselle = 100;
+const colonne = 10;
+
+if (tabellone) {
+    for (let i = 0; i < totaleCaselle; i++) {
+        let riga = Math.floor(i / colonne);
+        let colPos = (riga % 2 === 0) ? (i % colonne) + 1 : colonne - (i % colonne);
+        const tipo = categorie[i % categorie.length];
+        
+        const div = document.createElement('div');
+        div.id = `casella-${i + 1}`; 
+        div.className = `casella ${tipo.classe}`; 
+        div.style.gridColumn = colPos;
+        div.style.gridRow = riga + 1;
+        div.style.position = 'relative';
+        
+        div.innerHTML = `
+            <span>${i + 1}</span>
+            <div class="pedine-container" id="pedine-c-${i + 1}" 
+                 style="position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; 
+                        display: flex; align-items: flex-end; justify-content: center; 
+                        flex-wrap: wrap; pointer-events: none; padding-bottom: 2px;">
+            </div>`;
+
+        div.onclick = function() { apriDomanda(this, i + 1, tipo.nome); };
+        tabellone.appendChild(div);
+    }
+}
+
+// --- 3. GENERAZIONE LEGENDA E PROGRESSO ---
+const areaLegenda = document.getElementById('area-legenda');
+if (areaLegenda) {
+    areaLegenda.innerHTML = ""; 
+    categorie.forEach(c => {
+        areaLegenda.innerHTML += `
+            <div class="legenda-item">
+                <div class="legenda-color-box" style="background: ${c.colore};"></div>
+                <span>${c.nome}</span>
+            </div>`;
+    });
+}
+
+const areaProgresso = document.getElementById('area-progresso');
+if (areaProgresso) {
+    areaProgresso.innerHTML = ""; 
+    for (let g = 1; g <= 4; g++) {
+        let pHTML = `
+            <div class="giocatore-container">
+                <input type="text" id="nomeG${g}" value="${nomiG[g-1]}" class="giocatore-nome" oninput="salvaNomi()">
+                <div style="display: flex; gap: 5px; margin-bottom: 12px;">`;
+        
+        categorie.forEach(c => {
+            pHTML += `<div class="segmento-colore" 
+                           style="background:${c.colore};" 
+                           onclick="this.style.filter = (this.style.filter == 'brightness(1)') ? 'brightness(0.2)' : 'brightness(1)'">
+                      </div>`;
+        });
+
+        pHTML += `</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <span style="color: #aaa; font-size: clamp(10px, 0.8vw, 18px); font-weight: bold; text-transform: uppercase;">Movimento:</span>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-nav" onclick="muoviGiocatore(${g}, -1)" style="background: #444; color: white; border: 1px solid #666;">INDIETRO</button>
+                        <button class="btn-nav" onclick="muoviGiocatore(${g}, 1)" style="background: #007bff; color: white; border: none;">AVANTI</button>
+                    </div>
+                </div>
+            </div>`;
+        areaProgresso.innerHTML += pHTML;
+    }
+}
+
+// --- 4. FUNZIONI LOGICHE, MOVIMENTO E SALVATAGGIO ---
+function salvaNomi() {
+    for(let i=1; i<=4; i++) {
+        let el = document.getElementById('nomeG' + i);
+        if(el) nomiG[i-1] = el.value;
+    }
+    for(let i=1; i<=7; i++) {
+        let el = document.getElementById('nomeS' + i);
+        if(el) nomiS[i-1] = el.value;
+    }
+    localStorage.setItem('nomiG', JSON.stringify(nomiG));
+    localStorage.setItem('nomiS', JSON.stringify(nomiS));
+}
+
+function muoviGiocatore(player, passi) {
+    let nuovaPos = posizioniAttuali[player] + passi;
+    if (nuovaPos > 100) nuovaPos = 100;
+    if (nuovaPos < 1) nuovaPos = 1;
+    
+    posizioniAttuali[player] = nuovaPos;
+    localStorage.setItem('posTabellone', JSON.stringify(posizioniAttuali));
+    disegnaPedina(player, nuovaPos);
+}
+
+function disegnaPedina(player, casellaNum) {
+    const container = document.getElementById(`pedine-c-${casellaNum}`);
+    if (container) {
+        const vecchiaP = document.getElementById(`pedina-player-${player}`);
+        if (vecchiaP) vecchiaP.remove();
+
+        const div = document.createElement('div');
+        div.className = `pedina p${player}`;
+        div.id = `pedina-player-${player}`;
+        
+        div.style.width = '1.7vw';
+        div.style.height = '1.7vw';
+        div.style.minWidth = '22px';
+        div.style.minHeight = '22px';
+        div.style.backgroundColor = coloriPedine[player];
+        div.style.borderRadius = '50%';
+        div.style.border = '3px solid black'; 
+        div.style.display = 'inline-block';
+        div.style.margin = '1px';
+        div.style.boxShadow = '0 0 5px rgba(0,0,0,0.7)';
+        
+        container.appendChild(div);
+    }
+}
+
+// --- 5. INIZIALIZZAZIONE UNIFICATA ---
+window.onload = function() {
+    // Carica dati Giocatori (Punti, Nomi e Pedine)
+    for(let i=1; i<=4; i++) {
+        if(document.getElementById('punti' + i)) document.getElementById('punti' + i).innerText = punteggi[i-1];
+        if(document.getElementById('nomeG' + i)) document.getElementById('nomeG' + i).value = nomiG[i-1];
+        disegnaPedina(i, posizioniAttuali[i]);
+    }
+    // Carica dati Spettatori
+    for(let i=1; i<=7; i++) {
+        if(document.getElementById('puntiS' + i)) document.getElementById('puntiS' + i).innerText = puntiSpettatori[i-1];
+        if(document.getElementById('nomeS' + i)) document.getElementById('nomeS' + i).value = nomiS[i-1];
+    }
+};
+
+// --- 6. EXTRA (PUNTI, DADI, QUIZ) ---
+function modificaPunti(numGiocatore, operazione) {
+    let valore = parseInt(document.getElementById('val' + numGiocatore).value) || 0;
+    punteggi[numGiocatore - 1] += (operazione === 'piu' ? valore : -valore);
+    document.getElementById('punti' + numGiocatore).innerText = punteggi[numGiocatore - 1];
+    localStorage.setItem('puntiG', JSON.stringify(punteggi));
+}
+
+function modificaPuntiSpettatore(num) {
+    let valore = parseInt(document.getElementById('valS' + num).value) || 0;
+    puntiSpettatori[num-1] += valore;
+    document.getElementById('puntiS' + num).innerText = puntiSpettatori[num-1];
+    localStorage.setItem('puntiS', JSON.stringify(puntiSpettatori));
+}
+
+function lanciaDado(facce, elemento) {
+    // Gestione oscuramento: se clicco, aggiunge o toglie la classe 'oscurato'
+    if (elemento) {
+        elemento.classList.toggle('oscurato');
+        
+        // Se il dado è appena stato oscurato, non lanciare il numero (opzionale)
+        if (elemento.classList.contains('oscurato')) {
+            return; 
+        }
+    }
+
+    const display = document.getElementById('risultato-dado');
+    if (!display) return;
+    
+    display.innerText = "...";
+    setTimeout(() => {
+        const risultato = Math.floor(Math.random() * facce) + 1;
+        display.innerText = risultato;
+        display.style.color = (risultato === facce) ? "#00ff00" : (risultato === 1) ? "#ff0000" : "#ffcc00";
+    }, 150);
+}
+
+let audioCorrente = null; 
+
+function apriDomanda(elemento, numero, categoria) {
+    if (elemento) elemento.classList.add('visitata');
+
+    let dati = databaseDomande[numero] || { 
+        q: "Domanda n. " + numero, 
+        a: "Risposta non inserita",
+        img: null,
+        audio: null
+    };
+
+    document.getElementById('categoria-titolo').innerText = categoria;
+    const txtDomanda = document.getElementById('testo-domanda');
+    txtDomanda.innerText = dati.q;
+
+    // Reset elementi
+    const vecchioPlayer = document.getElementById('audio-player-container');
+    if (vecchioPlayer) vecchioPlayer.remove();
+    const imgElement = document.getElementById('immagine-domanda');
+    if (imgElement) imgElement.style.display = 'none';
+
+    // Logica SUONO
+    if (categoria.toUpperCase() === "SUONO") {
+        const percorsoAudio = dati.audio || `audio/${numero}.mp3`;
+        const audioContainer = document.createElement('div');
+        audioContainer.id = 'audio-player-container';
+        audioContainer.innerHTML = `<audio id="quiz-audio" controls autoplay style="width:100%; margin-top:20px;"><source src="${percorsoAudio}" type="audio/mpeg"></audio>`;
+        txtDomanda.after(audioContainer);
+        audioCorrente = document.getElementById('quiz-audio');
+    } 
+    // Logica ALTRE (Immagini)
+    else {
+        if (imgElement) {
+            imgElement.src = dati.img || `immagini/${numero}.jpg`;
+            imgElement.style.display = 'block';
+            imgElement.onerror = function() { this.style.display = 'none'; };
+        }
+    }
+
+    const areaRisposta = document.getElementById('area-risposta');
+    areaRisposta.innerText = dati.a;
+    areaRisposta.style.display = 'none';
+    document.getElementById('quiz-overlay').style.display = 'flex';
+}
+
+function mostraRisposta() {
+    document.getElementById('area-risposta').style.display = 'block';
+}
+
+function chiudiQuiz() {
+    document.getElementById('quiz-overlay').style.display = 'none';
+    if (audioCorrente) {
+        audioCorrente.pause();
+        audioCorrente.currentTime = 0;
+    }
+}
+</script>
+</body>
+</html>

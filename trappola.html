@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grande Griglia Quiz Musicale</title>
+    <style>
+        /* --- STILI GENERALI (Layout e Sfondo) --- */
+        body {
+            background-color: #121212; /* Sfondo scuro tipo Spotify */
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #ff00ff; /* Verde Spotify */
+            text-shadow: 0 0 10px #800080;
+        }
+
+        /* --- CONTENITORE PRINCIPALE DELLA GRIGLIA --- */
+        .super-griglia {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Spazio tra le sezioni */
+            width: 100%;
+            max-width: 1200px; /* Larghezza massima per schermi grandi */
+        }
+
+        /* --- STILI DELLE SEZIONI (Righe) --- */
+        .sezione {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .titolo-sezione {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #aaaaaa;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        /* Container flex per gli slot dentro la sezione */
+        .slot-container {
+            display: flex;
+            flex-wrap: wrap; /* Permette agli slot di andare a capo se non c'è spazio */
+            gap: 10px; /* Spazio tra gli slot */
+            justify-content: center; /* Centra gli slot nella riga */
+        }
+
+        /* --- STILI DEGLI SLOT (Bottoni Cliccabili) --- */
+        .slot {
+    background: linear-gradient(145deg, #4b0082, #800080); /* Gradiente stile carta */
+    color: #ffffff; 
+    border: 2px solid #ff00ff; /* Bordo fucsia acceso */
+    border-radius: 8px;
+    width: 100px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+        /* Effetto Hover (Passaggio del mouse) */
+        .slot:hover:not(.oscurato) {
+    background: #ff00ff;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff00ff;
+}
+
+        /* --- STILE SLOT OSCURATO (Dopo il click) --- */
+        .slot.oscurato {
+            background-color: #1a1a1a !important;
+            color: #444 !important;
+            border-color: #333 !important;
+            cursor: default; /* Rimuove il puntatore */
+            opacity: 0.6;
+            filter: grayscale(1); /* Rende tutto grigio */
+        }
+        
+        /* Simbolo di completamento sullo slot oscurato */
+        .slot.oscurato::after {
+            content: "✓";
+            position: absolute;
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- STILI DEL POPUP (Overlay e Contenuto) --- */
+        .popup-overlay {
+            display: none; /* Nascosto di default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Sfondo semi-trasparente scuro */
+            z-index: 1000; /* Sopra a tutto */
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px); /* Effetto sfocatura sfondo */
+        }
+
+        .popup-content {
+            background-color: #1a001a;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ff00ff;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+            animation: popupEntrata 0.3s ease-out; /* Animazione apparizione */
+        }
+
+        @keyframes popupEntrata {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .popup-titolo {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        /* Stile del lettore audio HTML5 */
+        audio {
+            width: 100%;
+            margin-bottom: 25px;
+            outline: none;
+        }
+        
+        /* Personalizzazione base colori audio player (dipende dal browser) */
+        audio::-webkit-media-controls-panel {
+            background-color: #333;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: white;
+        }
+
+        /* --- STILI DELL'AREA RISPOSTA NASCOSTA --- */
+        .area-risposta {
+            display: none; /* Nascosta di default */
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            border-left: 5px solid #1DB954;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* --- STILI DEI BOTTONI NEL POPUP --- */
+        .popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-risposta {
+            background-color: #1DB954; /* Verde */
+            color: white;
+        }
+        .btn-risposta:hover { background-color: #1ed760; }
+
+        .btn-chiudi {
+            background-color: #555; /* Grigio */
+            color: white;
+        }
+        .btn-chiudi:hover { background-color: #777; }
+
+ 
+.box-punteggi {
+    background: #1a001a;
+    border: 3px solid #ff00ff; /* Bordo più spesso stile carta */
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 0 20px #800080;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.titolo-punteggi {
+    color: #ff00ff;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #ff00ff;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.riga-punteggio {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 5px; /* Più spazio verticale tra le righe */
+    border-bottom: 1px solid #440044;
+    font-size: 18px; /* Testo più grande */
+}
+
+.riga-punteggio span:first-child {
+    color: #ffcc00; /* Oro per i numeri */
+    font-weight: bold;
+}
+
+.super-griglia {
+    margin-left: 20px; /* Crea un ulteriore cuscinetto d'aria */
+    flex-grow: 1;
+}
+    </style>
+</head>
+<body>
+
+    <h1>TRAPPOLA MUSICALE</h1>
+
+    <div style="display: grid; grid-template-columns: 250px 1fr; gap: 80px; padding: 20px; align-items: start;">
+        
+        <div class="box-punteggi" id="punteggi-musica" style="width: 100%; min-height: 600px; padding: 20px;">
+            <div class="titolo-punteggi" style="font-size: 22px; margin-bottom: 20px;">Punti Slot</div>
+            </div>
+
+        <div class="super-griglia">
+            </div>
+
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content">
+            <div class="popup-titolo" id="popupTitolo">Slot 1</div>
+            
+            <audio id="audioPlayer" controls>
+                <source id="audioSource" src="" type="audio/mpeg">
+                Il tuo browser non supporta l'elemento audio.
+            </audio>
+
+            <div class="area-risposta" id="areaRisposta">
+                Invisibile
+            </div>
+
+            <div class="popup-buttons">
+                <button class="btn btn-risposta" id="btnMostraRisposta">Mostra Risposta</button>
+                <button class="btn btn-chiudi" id="btnChiudiPopup">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. CONFIGURAZIONE GRIGLIA ---
+        const nomiSezioni = ["POP", "ROCK", "ALTERNATIVE ROCK", "ITALIANE", "METAL"];
+        const configGriglia = [10, 10, 10, 10, 5];
+        const gridContainer = document.querySelector('.super-griglia');
+
+        // --- 2. DATABASE CANZONI (Esempio) ---
+        // Struttura: 'Sezione_Slot' : { file: 'percorso/file.mp3', risposta: 'Nome Canzone - Artista' }
+        // Se il file non esiste, il player mostrerà un errore o non partirà.
+        // Usa nomi file semplici senza spazi (es: canzone1.mp3)
+        const databaseCanzoni = {
+            // Sezione 1
+            '1_1': { file: 'audio/pop1.mp3', risposta: 'Ed Sheeran – Shape of You' },
+            '1_2': { file: 'audio/mario.mp3', risposta: 'Super Mario Bros Theme' },
+            '1_3': { file: 'https://www.w3schools.com/html/horse.mp3', risposta: 'Esempio Audio Online (W3Schools)' }, // Esempio link esterno
+            '1_4': { file: 'canzone4.mp3', risposta: 'Thriller - Michael Jackson' },
+            // ... aggiungi tutte le altre fino alla 1_10
+
+            // Sezione 5 (quella da 5)
+            '5_1': { file: 'canzone5_1.mp3', risposta: 'Sezione 5 Slot 1' },
+            '5_5': { file: 'canzone5_5.mp3', risposta: 'Ultima Canzone!' },
+        };
+
+
+        // --- 3. RIFERIMENTI DOM POPUP ---
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupTitolo = document.getElementById('popupTitolo');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioSource = document.getElementById('audioSource');
+        const areaRisposta = document.getElementById('areaRisposta');
+        const btnMostraRisposta = document.getElementById('btnMostraRisposta');
+        const btnChiudiPopup = document.getElementById('btnChiudiPopup');
+
+        let slotCorrente = null; // Memorizza quale slot è aperto
+
+
+        // --- 4. GENERAZIONE AUTOMATICA DELLA GRIGLIA ---
+        configGriglia.forEach((numSlot, index) => {
+            const numSezione = index + 1;
+
+            // Crea il div della sezione
+            const sezioneDiv = document.createElement('div');
+            sezioneDiv.className = 'sezione';
+
+            // Crea il titolo della sezione
+            const titoloDiv = document.createElement('div');
+            titoloDiv.className = 'titolo-sezione';
+            titoloDiv.innerText = `${nomiSezioni[index]}`;
+            sezioneDiv.appendChild(titoloDiv);
+
+            // Crea il container degli slot
+            const slotContainerDiv = document.createElement('div');
+            slotContainerDiv.className = 'slot-container';
+
+            // Genera gli slot
+            for (let i = 1; i <= numSlot; i++) {
+                const slotBtn = document.createElement('button');
+                slotBtn.className = 'slot';
+                slotBtn.innerText = i; // Numero dello slot
+                
+                // ID univoco basato su sezione e numero slot (es: slot_1_3)
+                const slotId = `${numSezione}_${i}`;
+                slotBtn.id = `slot_${slotId}`; 
+                
+                // Aggiunge l'evento click allo slot
+                slotBtn.onclick = function() { apriPopupCanzone(this, slotId); };
+                
+                slotContainerDiv.appendChild(slotBtn);
+            }
+
+            sezioneDiv.appendChild(slotContainerDiv);
+            gridContainer.appendChild(sezioneDiv);
+        });
+
+
+        // --- 5. LOGICA DEL POPUP ---
+
+        // Funzione per aprire il popup
+        function apriPopupCanzone(elementoSlot, slotId) {
+            // Se lo slot è già oscurato, non fare nulla
+            if (elementoSlot.classList.contains('oscurato')) return;
+
+            slotCorrente = elementoSlot; // Salva lo slot cliccato
+            const datiCanzone = databaseCanzoni[slotId];
+
+            // Aggiorna contenuto popup
+            popupTitolo.innerText = `Sezione ${slotId.split('_')[0]} - Slot ${slotId.split('_')[1]}`;
+            areaRisposta.style.display = 'none'; // Nascondi risposta precedente
+            btnMostraRisposta.style.display = 'inline-block'; // Mostra bottone risposta
+
+            // Gestione Audio
+            if (datiCanzone) {
+                // Carica la canzone dal database
+                audioSource.src = datiCanzone.file;
+                areaRisposta.innerText = datiCanzone.risposta; // Prepara la risposta
+                audioPlayer.load(); // Ricarica il player con la nuova sorgente
+                // audioPlayer.play(); // Opzionale: fai partire la canzone in automatico
+            } else {
+                // Se non c'è nel database
+                audioSource.src = ""; // Rimuovi sorgente
+                audioPlayer.load();
+                areaRisposta.innerText = "Nessun dato per questo slot nel database.";
+            }
+
+            // Mostra il popup
+            popupOverlay.style.display = 'flex';
+        }
+
+        // Funzione per chiudere il popup
+        function chiudiPopup() {
+            popupOverlay.style.display = 'none';
+            audioPlayer.pause(); // Ferma la musica
+            audioPlayer.currentTime = 0; // Riavvolge la musica
+
+            // Oscura lo slot che era aperto
+            if (slotCorrente) {
+                slotCorrente.classList.add('oscurato');
+                slotCorrente = null; // Resetta lo slot corrente
+            }
+        }
+
+        // --- 6. EVENTI DEI BOTTONI DEL POPUP ---
+
+        // Bottone Mostra Risposta
+        btnMostraRisposta.onclick = function() {
+            areaRisposta.style.display = 'block'; // Mostra il div della risposta
+            this.style.display = 'none'; // Nascondi il bottone stesso
+        };
+
+        // Bottone Chiudi
+        btnChiudiPopup.onclick = chiudiPopup;
+
+        // Chiudi il popup cliccando fuori dal contenuto (sull'overlay)
+        popupOverlay.onclick = function(event) {
+            // Se il target del click è l'overlay stesso (e non il contenuto dentro)
+            if (event.target === popupOverlay) {
+                chiudiPopup();
+            }
+        };
+
+        // Chiudi il popup premendo il tasto ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && popupOverlay.style.display === 'flex') {
+                chiudiPopup();
+            }
+        });
+        
+const boxPunteggi = document.getElementById('punteggi-musica');
+for (let i = 1; i <= 10; i++) {
+    const puntiBase = i * 50;
+    const riga = document.createElement('div');
+    riga.className = 'riga-punteggio';
+    riga.innerHTML = `<span>Slot ${i}:</span> <span>${puntiBase} + ${puntiBase}</span>`;
+    boxPunteggi.appendChild(riga);
+}
+    </script>
+</body>
+</html>

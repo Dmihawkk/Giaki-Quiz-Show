@@ -1,0 +1,153 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* 1. Cambiato height in min-height per permettere alla pagina di allungarsi */
+    min-height: 100vh; 
+    background-color: #050505; 
+    display: flex;
+    /* 2. Fondamentale: mette i nomi SOPRA e la griglia SOTTO */
+    flex-direction: column; 
+    /* 3. Allinea tutto al centro orizzontalmente */
+    align-items: center; 
+    /* 4. Fondamentale: permette di scendere col mouse se la griglia è lunga */
+    overflow-y: auto; 
+}
+
+.main-wrapper {
+    /* 5. Larghezza totale ma altezza flessibile per la griglia */
+    width: 100vw;
+    min-height: 80vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 5vh 2vw; 
+}
+
+.container-sfide {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    /* 1. CAMBIA QUESTO: auto invece di 1fr per far respirare le righe */
+    grid-template-rows: repeat(4, auto); 
+    
+    gap: 20px; 
+    width: 95%;
+    /* 2. CAMBIA QUESTO: min-height invece di height: 100% */
+    min-height: 60vh; 
+    margin: 50px auto;
+    justify-content: center;
+    align-content: start;
+}
+
+.cd-slot {
+    min-height: clamp(100px, 15vh, 250px);
+    width: 100%;
+    height: 100%;
+    
+    /* Cambia il colore solido con questo valore RGBA */
+    /* 0, 0, 0 è nero, 0.5 è l'opacità (50%) */
+    background-color: rgba(0, 0, 0, 0.5); 
+    
+    background-size: contain !important; 
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 0.3vw solid #ffcc00;
+    border-radius: 1vw;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+    
+    /* Opzionale: aggiunge un leggero effetto sfocato dietro la cella */
+    backdrop-filter: blur(5px); 
+    color: white !important; /* Colore del testo predefinito */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: center;
+    /* Font responsivo per 4K */
+    font-size: clamp(20px, 2.5vw, 50px);
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* Il testo deve stare sopra lo sfondo */
+}
+
+.cd-slot:hover {
+    transform: scale(1.08);
+    border-color: #fff;
+    z-index: 5;
+}
+
+.cd-slot.verde::after, 
+.cd-slot.rosso::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* Copre l'immagine di sfondo */
+    border-radius: 0.7vw;
+}
+
+/* Colore Verde Opaco */
+.cd-slot.verde::after {
+    background-color: rgba(40, 167, 69, 0.7); /* Verde con opacità */
+}
+
+.cd-slot.verde {
+    border-color: #28a745 !important;
+    transform: scale(1);
+    box-shadow: 0 0 40px rgba(40, 167, 69, 0.4);
+}
+
+/* Colore Rosso Opaco */
+.cd-slot.rosso::after {
+    background-color: rgba(220, 53, 69, 0.8); /* Rosso con opacità */
+}
+
+.cd-slot.rosso {
+    border-color: #dc3545 !important;
+    transform: scale(1); /* Reset scala al click */
+    box-shadow: 0 0 40px rgba(220, 53, 69, 0.4);
+}
+
+.contenitore-fase5 {
+    text-align: center;      
+    margin-top: 50px;        
+    margin-bottom: 50px;     
+}
+
+.btn-fase5 {
+    display: inline-block;
+    /* Padding generoso: 3% dell'altezza e 6% della larghezza schermo */
+    padding: 3vh 6vw; 
+    background-color: #ffcc00; 
+    color: #1a1a1a; 
+    
+    /* Font Serif elegante come richiesto nell'esempio */
+    font-family: "Times New Roman", Times, serif; 
+    /* Grandezza dinamica: minimo 35px, ideale 4vw, massimo 85px */
+    font-size: clamp(35px, 4vw, 85px); 
+    font-weight: bold;
+    
+    text-decoration: none; 
+    text-transform: uppercase; 
+    border: 3px solid #1a1a1a; 
+    transition: all 0.3s ease; 
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.btn-fase5:hover {
+    background-color: white; 
+    color: black;
+    transform: scale(1.05) translateY(-5px);
+    border-color: black;    
+}

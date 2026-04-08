@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giaki Quiz Show</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div style="display: flex; justify-content: center; align-items: stretch; gap: 2vw; margin: 0 auto; width: 98%; padding-left: 5vw; padding-top: 20px;">
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; flex-shrink: 0;">
+        <script>
+            for(let i=1; i<=4; i++) {
+                document.write(`
+                    <div style="text-align: center; background: #1a1a1a; border: 0.3vw solid #ffcc00; padding: 1.5vh 1vw; border-radius: 1vw; width: 17vw; min-width: 220px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5);">
+                        
+                        <div style="width: 100%;">
+                            <input type="text" id="nomeG${i}" oninput="salvaNomi()" placeholder="NOME G${i}..." style="width: 90%; background: #222; color: #ffcc00; border: 1px solid #444; text-align: center; font-weight: bold; text-transform: uppercase; border-radius: 5px; padding: 8px; font-size: clamp(20px, 1.8vw, 36px);">
+                        </div>
+                        
+                        <div id="punti${i}" style="font-size: clamp(50px, 6vw, 100px); color: #ffcc00; font-weight: bold; margin: 1vh 0;">0</div>
+                        
+                        <div style="width: 100%;">
+                            <div style="color: #aaa; font-size: clamp(10px, 0.7vw, 16px); margin-bottom: 2px; letter-spacing: 2px;">VALORE</div>
+                            <input type="number" id="val${i}" value="100" style="width: 5vw; min-width: 70px; font-size: clamp(18px, 1.3vw, 30px); text-align: center; margin-bottom: 10px; border-radius: 5px; border: 1px solid #444; background: white;">
+                            
+                            <div style="display: flex; justify-content: center; gap: 0.8vw;">
+                                <button onclick="modificaPunti(${i}, 'piu')" style="background: #28a745; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">+</button>
+                                <button onclick="modificaPunti(${i}, 'meno')" style="background: #dc3545; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">-</button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        </script>
+    </div>
+
+    <div style="background: #1a1a1a; border: 0.3vw solid #ffcc00; border-radius: 1vw; padding: 1.5vw; flex-grow: 1; font-family: sans-serif; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; margin-right: 2vw;">
+        <div style="color: #ffcc00; font-size: clamp(22px, 2.2vw, 45px); font-weight: bold; text-align: center; margin-bottom: 2vh; border-bottom: 0.2vw solid #ffcc00; text-transform: uppercase; padding-bottom: 1vh;">
+            Classifica Spettatori
+        </div>
+        
+        <table style="width: 100%; color: white; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+                <tr style="font-size: clamp(20px, 1.8vw, 32px); border-bottom: 3px solid #444; color: #bbb; text-transform: uppercase; letter-spacing: 1px;">
+                    <th style="text-align: left; padding: 1.5vh 1vh; width: 35%;">NOME SPETTATORE</th>
+                    <th style="text-align: center; width: 15%;">PUNTI</th>
+                    <th style="text-align: center; width: 15%;">VALORE</th>
+                    <th style="text-align: center; width: 12%;"><a href="trappola.html">SFIDA</a></th> 
+                    <th style="text-align: right; padding-right: 1.5vw; width: 23%;">AZIONE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    for(let i=1; i<=7; i++) {
+                        document.write(`
+                            <tr style="border-bottom: 1px solid #333;">
+                                <td style="padding: 1.2vh 0.5vw;">
+                                    <input type="text" id="nomeS${i}" oninput="salvaNomi()" placeholder="Nome..." style="width: 95%; background: #222; color: white; border: 1px solid #444; padding: 0.8vh; font-weight: 900; border-radius: 0.3vw; font-size: clamp(18px, 1.6vw, 36px);">
+                                </td>
+                                <td id="puntiS${i}" style="text-align: center; font-weight: bold; color: #ffcc00; font-size: clamp(30px, 3.2vw, 65px); line-height: 1.2;">0</td>
+                                <td style="text-align: center;">
+                                    <input type="number" id="valS${i}" value="100" style="width: 70%; max-width: 100px; font-size: clamp(16px, 1.2vw, 26px); text-align: center; padding: 0.5vh; border-radius: 0.3vw; border: 1px solid #444; background: white; color: black;">
+                                </td>
+                                <td style="text-align: center;">
+                                    <span onclick="this.style.opacity='0.2'; this.style.filter='grayscale(1) shadow(0 0 0 transparent)';" 
+                                          style="font-size: clamp(35px, 3.5vw, 65px); cursor: pointer; filter: drop-shadow(0 0 10px red); display: inline-block; transition: all 0.3s; line-height: 1;">
+                                        ⚠️
+                                    </span>
+                                </td>
+                                <td style="text-align: right; padding: 1vh 1vw 1vh 0;">
+                                    <button onclick="modificaPuntiSpettatore(${i})" style="background: #28a745; color: white; border: none; padding: 1vh 0; cursor: pointer; font-weight: bold; font-size: clamp(14px, 1.1vw, 22px); border-radius: 0.5vw; width: 100%; max-width: 160px; transition: 0.2s;">
+                                        AGGIUNGI
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+  <div class="tabellone">
+  <div class="header"><img src="immagini/Edgy.png"></div>
+  <div class="header"><img class="img-ps2" src="immagini/ps2.png"> </div>
+  <div class="header"><img class="img-saga" src="immagini/zoro.png"></div>
+  <div class="header"><img class="img-giochi" src="immagini/giochi.png"></div>
+  <div class="header"><img class="img-baretto" src="immagini/baretto.png"></div>
+  
+  
+  <label for="q1" class="cella">100</label>
+  <label for="q2" class="cella">100</label>
+  <label for="q3" class="cella">100</label>
+  <label for="q4" class="cella">100</label>
+  <label for="q5" class="cella">100</label>
+  <label for="q6" class="cella">200</label>
+  <label for="q7" class="cella">200</label>
+  <label for="q8" class="cella">200</label>
+  <label for="q9" class="cella">200</label>
+  <label for="q10" class="cella">200</label>
+  <label for="q11" class="cella">300</label>
+  <label for="q12" class="cella">300</label>
+  <label for="q13" class="cella">300</label>
+  <label for="q14" class="cella">300</label>
+  <label for="q15" class="cella">300</label>
+  <label for="q16" class="cella">400</label>
+  <label for="q17" class="cella">400</label>
+  <label for="q18" class="cella">400</label>
+  <label for="q19" class="cella">400</label>
+  <label for="q20" class="cella">400</label>
+  <label for="q21" class="cella">500</label>
+  <label for="q22" class="cella">500</label>
+  <label for="q23" class="cella">500</label>
+  <label for="q24" class="cella">500</label>
+  <label for="q25" class="cella">500</label>
+</div>
+
+
+<div class="contenitore-domande">
+    <input type="checkbox" id="q1" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Dimacco</p>
+      <input type="checkbox" id="ans1" class="toggle-risposta" style="display:none">
+      <p class="risposta">Dracul Mihawk</p>
+      <div class="bottoni-box">
+        <label for="ans1" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q2" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>L'origine del termine "Nomurata"</p>
+      <input type="checkbox" id="ans2" class="toggle-risposta" style="display:none">
+      <p class="risposta">Kingdom Hearts</p>
+      <div class="bottoni-box">
+        <label for="ans2" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q3" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p style="text-align: center;"> <img src="immagini/Alabasta.jpg" style="width: 80%; max-width: 1200px; height: auto; object-fit: contain; border: 0.2vw solid #ffcc00; border-radius: 1vw;"></p>
+      <input type="checkbox" id="ans3" class="toggle-risposta" style="display:none">
+      <p class="risposta">Alabasta</p>
+      <div class="bottoni-box">
+        <label for="ans3" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+    </div>
+  </div>
+
+  <input type="checkbox" id="q4" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Sono carini, ma alcuni fanno BOOM!</p>
+      <input type="checkbox" id="ans4" class="toggle-risposta" style="display:none">
+      <p class="risposta">Exploding Kittens</p>
+      <div class="bottoni-box">
+        <label for="ans4" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q5" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>No compà vedi che la skill c'è, basta sapere come tirarlo </p>
+      <input type="checkbox" id="ans5" class="toggle-risposta" style="display:none">
+      <p class="risposta">Bayblade</p>
+      <div class="bottoni-box">
+        <label for="ans5" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q6" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>La mia mossa finale avrebbe potuto far estinguere i dinosauri</p>
+      <input type="checkbox" id="ans6" class="toggle-risposta" style="display:none">
+      <p class="risposta">Sephiroth</p>
+      <div class="bottoni-box">
+        <label for="ans6" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q7" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Perché limitarsi a bestemmiare quando le divinità le puoi letteralmente massacrare?</p>
+      <input type="checkbox" id="ans7" class="toggle-risposta" style="display:none">
+      <p class="risposta">God of War</p>
+      <div class="bottoni-box">
+        <label for="ans7" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q8" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p style="text-align: center;"> <img src="immagini/nami.jpg" style="width: 80%; max-width: 1200px; height: auto; object-fit: contain; border: 0.2vw solid #ffcc00; border-radius: 1vw;"></p></p>
+      <input type="checkbox" id="ans8" class="toggle-risposta" style="display:none">
+      <p class="risposta">Arlong Park</p>
+      <div class="bottoni-box">
+        <label for="ans8" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+    </div>
+  </div>
+
+  <input type="checkbox" id="q9" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Ma quindi le citazioni si possono fare si o no? </p>
+      <input type="checkbox" id="ans9" class="toggle-risposta" style="display:none">
+      <p class="risposta">Little Secret</p>
+      <div class="bottoni-box">
+        <label for="ans9" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q10" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Fanno talmente tanto schifo che possono piacere solo a Luigi (e a Diana se sono carini) </p>
+      <input type="checkbox" id="ans10" class="toggle-risposta" style="display:none">
+      <p class="risposta">Funko Pop (di merda) </p>
+      <div class="bottoni-box">
+        <label for="ans10" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q11" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>La più grande collezione mondiale di armi bianche nascosta al di sotto dei giardini Babilonesi </p>
+      <input type="checkbox" id="ans11" class="toggle-risposta" style="display:none">
+      <p class="risposta">Gilgamesh</p>
+      <div class="bottoni-box">
+        <label for="ans11" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q12" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Se li avesse affrontati lui, dei 300 spartani non sarebbe rimasta neanche la leggenda, ma solo una manciata di sabbia persa nel tempo.</p>
+      <input type="checkbox" id="ans12" class="toggle-risposta" style="display:none">
+      <p class="risposta">Prince of Persia: le sabbie del tempo</p>
+      <div class="bottoni-box">
+        <label for="ans12" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q13" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p style="text-align: center;"> <img src="immagini/pugno.jpg" style="width: 80%; max-width: 1200px; height: auto; object-fit: contain; border: 0.2vw solid #ffcc00; border-radius: 1vw;"></p></p>
+      <input type="checkbox" id="ans13" class="toggle-risposta" style="display:none">
+      <p class="risposta">Arcipelago Sabaody</p>
+      <div class="bottoni-box">
+        <label for="ans13" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+    </div>
+  </div>
+
+  <input type="checkbox" id="q14" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Se lo dici, perdiamo tutti... anche tu</p>
+      <input type="checkbox" id="ans14" class="toggle-risposta" style="display:none">
+      <p class="risposta">The Game</p>
+      <div class="bottoni-box">
+        <label for="ans14" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q15" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Ormai è diventato il Fortnite dei TCG</p>
+      <input type="checkbox" id="ans15" class="toggle-risposta" style="display:none">
+      <p class="risposta">Magic the Gathering </p>
+      <div class="bottoni-box">
+        <label for="ans15" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+    <input type="checkbox" id="q16" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Il tizio con lo sguardo da lunedì mattina che ti aiuta a passare l'esame solo per dimostrare che sei una pedina nel suo gioco da tavolo mentale.</p>
+      <input type="checkbox" id="ans16" class="toggle-risposta" style="display:none">
+      <p class="risposta">Kiyotaka Ayanokoji</p>
+      <div class="bottoni-box">
+        <label for="ans16" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q17" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Dire ad un bambino di non provarci a casa non lo fermerà dallo spaccarsi di botte con i fratelli</p>
+      <input type="checkbox" id="ans17" class="toggle-risposta" style="display:none">
+      <p class="risposta"> SmackDown vs Raw</p>
+      <div class="bottoni-box">
+        <label for="ans17" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q18" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p style="text-align: center;"> <img src="immagini/shoot.png" style="width: 80%; max-width: 1200px; height: auto; object-fit: contain; border: 0.2vw solid #ffcc00; border-radius: 1vw;"></p>
+      <input type="checkbox" id="ans18" class="toggle-risposta" style="display:none">
+      <p class="risposta">Enies Lobby</p>
+      <div class="bottoni-box">
+        <label for="ans18" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+    </div>
+  </div>
+
+  <input type="checkbox" id="q19" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Ad oggi, ne puoi visitare solo una </p>
+      <input type="checkbox" id="ans19" class="toggle-risposta" style="display:none">
+      <p class="risposta">7 Wonders</p>
+      <div class="bottoni-box">
+        <label for="ans19" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q20" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Ma è un negozio di Hobbistica o una ricostruzione del Giappone Feudale?</p>
+      <input type="checkbox" id="ans20" class="toggle-risposta" style="display:none">
+      <p class="risposta">Katane</p>
+      <div class="bottoni-box">
+        <label for="ans20" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+    <input type="checkbox" id="q21" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Aiutare mio fratello mi è costato un occhio dalla testa</p>
+      <input type="checkbox" id="ans21" class="toggle-risposta" style="display:none">
+      <p class="risposta">Itachi Uchiha</p>
+      <div class="bottoni-box">
+        <label for="ans21" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q22" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Cerchio, destra, Cerchio, destra, sinistra, Quadrato, X... decisamente il più popolare</p>
+      <input type="checkbox" id="ans22" class="toggle-risposta" style="display:none">
+      <p class="risposta">GTA:San Andreas</p>
+      <div class="bottoni-box">
+        <label for="ans22" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q23" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p style="text-align: center;"> <img src="immagini/nera.png" style="width: 80%; max-width: 1200px; height: auto; object-fit: contain; border: 0.2vw solid #ffcc00; border-radius: 1vw;"></p>
+      <input type="checkbox" id="ans23" class="toggle-risposta" style="display:none">
+      <p class="risposta">Jaya</p>
+      <div class="bottoni-box">
+        <label for="ans23" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+    </div>
+  </div>
+
+  <input type="checkbox" id="q24" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Basta una singola frase per sprigionare la vena artistica che è in noi </p>
+      <input type="checkbox" id="ans24" class="toggle-risposta" style="display:none">
+      <p class="risposta">Dixit</p>
+      <div class="bottoni-box">
+        <label for="ans24" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+  </div>
+
+  <input type="checkbox" id="q25" class="toggle" style="display: none">
+  <div class="overlay">
+    <div class="box">
+      <p>Sembrano cose stupide eppure il baretto ci campa vendendole  </p>
+      <input type="checkbox" id="ans25" class="toggle-risposta" style="display:none">
+      <p class="risposta">Caramelle</p>
+      <div class="bottoni-box">
+        <label for="ans25" class="mostra-risposta">MOSTRA RISPOSTA</label>
+      <button type="button" class="chiudi" onclick="this.closest('.overlay').style.display='none'">CHIUDI</button>
+    </div>
+  </div>
+</div>
+
+<div class="contenitore-fase2">
+<a href="fase2.html" class="btn-fase2">VAI ALLA FASE 2</a>
+</div>
+<script>
+// 1. Carica punti E nomi salvati (o array vuoti se è la prima volta)
+let punteggi = JSON.parse(localStorage.getItem('puntiG')) || [0, 0, 0, 0];
+let puntiSpettatori = JSON.parse(localStorage.getItem('puntiS')) || [0, 0, 0, 0, 0, 0, 0];
+let nomiG = JSON.parse(localStorage.getItem('nomiG')) || ["", "", "", ""];
+let nomiS = JSON.parse(localStorage.getItem('nomiS')) || ["", "", "", "", "", "", ""];
+
+// 2. Carica tutto all'avvio
+window.onload = function() {
+    // Carica dati Giocatori
+    for(let i=1; i<=4; i++) {
+        if(document.getElementById('punti' + i)) document.getElementById('punti' + i).innerText = punteggi[i-1];
+        if(document.getElementById('nomeG' + i)) document.getElementById('nomeG' + i).value = nomiG[i-1];
+    }
+    // Carica dati Spettatori
+    for(let i=1; i<=7; i++) {
+        if(document.getElementById('puntiS' + i)) document.getElementById('puntiS' + i).innerText = puntiSpettatori[i-1];
+        if(document.getElementById('nomeS' + i)) document.getElementById('nomeS' + i).value = nomiS[i-1];
+    }
+};
+
+// 3. Funzione per salvare i nomi (chiamata ogni volta che scrivi)
+function salvaNomi() {
+    for(let i=1; i<=4; i++) {
+        nomiG[i-1] = document.getElementById('nomeG' + i).value;
+    }
+    for(let i=1; i<=7; i++) {
+        nomiS[i-1] = document.getElementById('nomeS' + i).value;
+    }
+    localStorage.setItem('nomiG', JSON.stringify(nomiG));
+    localStorage.setItem('nomiS', JSON.stringify(nomiS));
+}
+
+// 4. Funzioni punti (rimangono quasi uguali)
+function modificaPunti(numGiocatore, operazione) {
+    let valore = parseInt(document.getElementById('val' + numGiocatore).value) || 0;
+    punteggi[numGiocatore - 1] += (operazione === 'piu' ? valore : -valore);
+    document.getElementById('punti' + numGiocatore).innerText = punteggi[numGiocatore - 1];
+    localStorage.setItem('puntiG', JSON.stringify(punteggi));
+}
+
+function modificaPuntiSpettatore(num) {
+    let valore = parseInt(document.getElementById('valS' + num).value) || 0;
+    puntiSpettatori[num-1] += valore;
+    document.getElementById('puntiS' + num).innerText = puntiSpettatori[num-1];
+    localStorage.setItem('puntiS', JSON.stringify(puntiSpettatori));
+}
+</script>
+</body>
+</html>

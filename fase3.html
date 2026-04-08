@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fase 3</title>
+    <link rel="stylesheet" href="css/styles3.css">
+</head>
+<body style="background-image: url(immagini/mhsfondo.png); background-size: cover; background-attachment: fixed; background-position: center; margin: 0; padding: 0;">
+
+    <div style="display: flex; justify-content: center; align-items: stretch; gap: 2vw; margin: 0 auto; width: 98%; padding-left: 5vw; padding-top: 20px;">
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; flex-shrink: 0;">
+        <script>
+            for(let i=1; i<=4; i++) {
+                document.write(`
+                    <div style="text-align: center; background: #1a1a1a; border: 0.3vw solid #ffcc00; padding: 1.5vh 1vw; border-radius: 1vw; width: 17vw; min-width: 220px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5);">
+                        
+                        <div style="width: 100%;">
+                            <input type="text" id="nomeG${i}" oninput="salvaNomi()" placeholder="NOME G${i}..." style="width: 90%; background: #222; color: #ffcc00; border: 1px solid #444; text-align: center; font-weight: bold; text-transform: uppercase; border-radius: 5px; padding: 8px; font-size: clamp(20px, 1.8vw, 36px);">
+                        </div>
+                        
+                        <div id="punti${i}" style="font-size: clamp(50px, 6vw, 100px); color: #ffcc00; font-weight: bold; margin: 1vh 0;">0</div>
+                        
+                        <div style="width: 100%;">
+                            <div style="color: #aaa; font-size: clamp(10px, 0.7vw, 16px); margin-bottom: 2px; letter-spacing: 2px;">VALORE</div>
+                            <input type="number" id="val${i}" value="100" style="width: 5vw; min-width: 70px; font-size: clamp(18px, 1.3vw, 30px); text-align: center; margin-bottom: 10px; border-radius: 5px; border: 1px solid #444; background: white;">
+                            
+                            <div style="display: flex; justify-content: center; gap: 0.8vw;">
+                                <button onclick="modificaPunti(${i}, 'piu')" style="background: #28a745; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">+</button>
+                                <button onclick="modificaPunti(${i}, 'meno')" style="background: #dc3545; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">-</button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        </script>
+    </div>
+
+    <div style="background: #1a1a1a; border: 0.3vw solid #ffcc00; border-radius: 1vw; padding: 1.5vw; flex-grow: 1; font-family: sans-serif; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; margin-right: 2vw;">
+        <div style="color: #ffcc00; font-size: clamp(22px, 2.2vw, 45px); font-weight: bold; text-align: center; margin-bottom: 2vh; border-bottom: 0.2vw solid #ffcc00; text-transform: uppercase; padding-bottom: 1vh;">
+            Classifica Spettatori
+        </div>
+        
+        <table style="width: 100%; color: white; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+                <tr style="font-size: clamp(20px, 1.8vw, 32px); border-bottom: 3px solid #444; color: #bbb; text-transform: uppercase; letter-spacing: 1px;">
+                    <th style="text-align: left; padding: 1.5vh 1vh; width: 35%;">NOME SPETTATORE</th>
+                    <th style="text-align: center; width: 15%;">PUNTI</th>
+                    <th style="text-align: center; width: 15%;">VALORE</th>
+                    <th style="text-align: center; width: 12%;"><a href="trappola.html">SFIDA</a></th> 
+                    <th style="text-align: right; padding-right: 1.5vw; width: 23%;">AZIONE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    for(let i=1; i<=7; i++) {
+                        document.write(`
+                            <tr style="border-bottom: 1px solid #333;">
+                                <td style="padding: 1.2vh 0.5vw;">
+                                    <input type="text" id="nomeS${i}" oninput="salvaNomi()" placeholder="Nome..." style="width: 95%; background: #222; color: white; border: 1px solid #444; padding: 0.8vh; font-weight: 900; border-radius: 0.3vw; font-size: clamp(18px, 1.6vw, 36px);">
+                                </td>
+                                <td id="puntiS${i}" style="text-align: center; font-weight: bold; color: #ffcc00; font-size: clamp(30px, 3.2vw, 65px); line-height: 1.2;">0</td>
+                                <td style="text-align: center;">
+                                    <input type="number" id="valS${i}" value="100" style="width: 70%; max-width: 100px; font-size: clamp(16px, 1.2vw, 26px); text-align: center; padding: 0.5vh; border-radius: 0.3vw; border: 1px solid #444; background: white; color: black;">
+                                </td>
+                                <td style="text-align: center;">
+                                    <span onclick="this.style.opacity='0.2'; this.style.filter='grayscale(1) shadow(0 0 0 transparent)';" 
+                                          style="font-size: clamp(35px, 3.5vw, 65px); cursor: pointer; filter: drop-shadow(0 0 10px red); display: inline-block; transition: all 0.3s; line-height: 1;">
+                                        ⚠️
+                                    </span>
+                                </td>
+                                <td style="text-align: right; padding: 1vh 1vw 1vh 0;">
+                                    <button onclick="modificaPuntiSpettatore(${i})" style="background: #28a745; color: white; border: none; padding: 1vh 0; cursor: pointer; font-weight: bold; font-size: clamp(14px, 1.1vw, 22px); border-radius: 0.5vw; width: 100%; max-width: 160px; transition: 0.2s;">
+                                        AGGIUNGI
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+        <div class="container-sfide">
+            <script>
+                const datiSfide = [
+                    { img: ['immagini/skyrim1.png', 'immagini/skyrim2.png', 'immagini/skyrim3.png', 'immagini/skyrim4.png', 'immagini/skyrim5.png', 'immagini/skyrim6.png'], nome: "SKYRIM" },
+                    { img: ['immagini/rdr1.png', 'immagini/rdr2.png', 'immagini/rdr3.png', 'immagini/rdr4.png', 'immagini/rdr5.png', 'immagini/rdr6.png'], nome: "RED DEAD REDEMPTION 2" },
+                    { img: ['immagini/fma1.jpg', 'immagini/fma2.jpg', 'immagini/fma3.jpg', 'immagini/fma4.jpg', 'immagini/fma5.png', 'immagini/fma6.png'], nome: "FULL METAL ALCHEMIST" },
+                    { img: ['immagini/fallout1.jpg', 'immagini/fallout2.jpg', 'immagini/fallout3.jpg', 'immagini/fallout4.jpg', 'immagini/fallout5.jpg', 'immagini/fallout6.png'], nome: "FALLOUT NEW VEGAS" },
+                    { img: ['immagini/effect1.png', 'immagini/effect2.jpg', 'immagini/effect3.PNG', 'immagini/effect4.PNG', 'immagini/effect5.jpg', 'immagini/effect6.PNG'], nome: "MASS EFFECT" },
+                    { img: ['immagini/tekken1.jpg', 'immagini/tekken2.jpg', 'immagini/tekken3.jpg', 'immagini/tekken4.jpg', 'immagini/tekken5.jpg', 'immagini/tekken6.jpg'], nome: "TEKKEN" },
+                    { img: ['immagini/gundam1.PNG', 'immagini/gundam2.png', 'immagini/gundam3.jpg', 'immagini/gundam4.PNG', 'immagini/gundam5.PNG', 'immagini/gundam6.PNG'], nome: "GUNDAM WITCH FROM MERCURY" },
+                    { img: ['immagini/zelda1.jpg', 'immagini/zelda2.PNG', 'immagini/zelda3.jpg', 'immagini/zelda4.PNG', 'immagini/zelda5.PNG', 'immagini/zelda6.PNG'], nome: "THE LEGEND OF ZELDA" },
+                    { img: ['immagini/ghoul1.PNG', 'immagini/ghoul2.PNG', 'immagini/ghoul3.PNG', 'immagini/ghoul4.PNG', 'immagini/ghoul5.PNG', 'immagini/ghoul6.PNG'], nome: "TOKYO GHOUL" },
+                    { img: ['immagini/re1.PNG', 'immagini/re2.PNG', 'immagini/re3.PNG', 'immagini/re4.PNG', 'immagini/re5.PNG', 'immagini/re6.PNG'], nome: "RESIDENT EVIL" },
+                    { img: ['immagini/zero1.PNG', 'immagini/zero2.PNG', 'immagini/zero3.PNG', 'immagini/zero4.PNG', 'immagini/zero5.PNG', 'immagini/zero6.PNG'], nome: "RE:ZERO (zero come quello che vale)" },
+                    { img: ['immagini/lagan1.PNG', 'immagini/lagan2.PNG', 'immagini/lagan3.PNG', 'immagini/lagan4.PNG', 'immagini/lagan5.PNG', 'immagini/lagan6.PNG'], nome: "GURREN LAGANN" },
+                    // Aggiungi gli altri qui...
+                ];
+
+                for(let i=1; i<=12; i++) {
+                    const sfida = datiSfide[i-1] || { img: ['immagini/placeholder.png'], nome: "???" };
+                    const listaImg = JSON.stringify(sfida.img);
+                    document.write(`
+                        <div class="cd-slot" onclick='apriQuizPersonaggio(this, ${listaImg}, "${sfida.nome}")'>
+                            <span>SFIDA ${i}</span>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+    </div>
+
+    <div id="overlay-personaggio">
+        <div class="popup-content">
+            <div id="contenitore-indizi"></div>
+            <div id="nome-personaggio" style="display:none; color:#00ff00; font-size:40px; font-weight:bold; text-transform:uppercase; margin:20px;"></div>
+            
+            <div style="margin-top:20px;">
+                <button id="btn-next" onclick="prossimoIndizio()" style="background:#007bff; color:white;">PROSSIMO INDIZIO</button>
+                <button onclick="document.getElementById('nome-personaggio').style.display='block'" style="background:#28a745; color:white;">MOSTRA SOLUZIONE</button>
+                <button onclick="chiudiQuizPersonaggio()" style="background:#dc3545; color:white;">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="contenitore-fase4">
+<a href="fase4.html" class="btn-fase4">VAI ALLA FASE 4</a>
+</div>
+
+    <script>
+       // 1. Carica punti E nomi salvati (o array vuoti se è la prima volta)
+let punteggi = JSON.parse(localStorage.getItem('puntiG')) || [0, 0, 0, 0];
+let puntiSpettatori = JSON.parse(localStorage.getItem('puntiS')) || [0, 0, 0, 0, 0, 0, 0];
+let nomiG = JSON.parse(localStorage.getItem('nomiG')) || ["", "", "", ""];
+let nomiS = JSON.parse(localStorage.getItem('nomiS')) || ["", "", "", "", "", "", ""];
+
+// 2. Carica tutto all'avvio
+window.onload = function() {
+    // Carica dati Giocatori
+    for(let i=1; i<=4; i++) {
+        if(document.getElementById('punti' + i)) document.getElementById('punti' + i).innerText = punteggi[i-1];
+        if(document.getElementById('nomeG' + i)) document.getElementById('nomeG' + i).value = nomiG[i-1];
+    }
+    // Carica dati Spettatori
+    for(let i=1; i<=7; i++) {
+        if(document.getElementById('puntiS' + i)) document.getElementById('puntiS' + i).innerText = puntiSpettatori[i-1];
+        if(document.getElementById('nomeS' + i)) document.getElementById('nomeS' + i).value = nomiS[i-1];
+    }
+};
+
+// 3. Funzione per salvare i nomi (chiamata ogni volta che scrivi)
+function salvaNomi() {
+    for(let i=1; i<=4; i++) {
+        nomiG[i-1] = document.getElementById('nomeG' + i).value;
+    }
+    for(let i=1; i<=7; i++) {
+        nomiS[i-1] = document.getElementById('nomeS' + i).value;
+    }
+    localStorage.setItem('nomiG', JSON.stringify(nomiG));
+    localStorage.setItem('nomiS', JSON.stringify(nomiS));
+}
+
+// 4. Funzioni punti (rimangono quasi uguali)
+function modificaPunti(numGiocatore, operazione) {
+    let valore = parseInt(document.getElementById('val' + numGiocatore).value) || 0;
+    punteggi[numGiocatore - 1] += (operazione === 'piu' ? valore : -valore);
+    document.getElementById('punti' + numGiocatore).innerText = punteggi[numGiocatore - 1];
+    localStorage.setItem('puntiG', JSON.stringify(punteggi));
+}
+
+function modificaPuntiSpettatore(num) {
+    let valore = parseInt(document.getElementById('valS' + num).value) || 0;
+    puntiSpettatori[num-1] += valore;
+    document.getElementById('puntiS' + num).innerText = puntiSpettatori[num-1];
+    localStorage.setItem('puntiS', JSON.stringify(puntiSpettatori));
+}
+
+        // LOGICA QUIZ
+        let indiziAttuali = [];
+        let indiceIndizio = 0;
+        let slotAttivo = null;
+
+        function apriQuizPersonaggio(elemento, listaImmagini, nomeSoluzione) {
+            slotAttivo = elemento;
+            indiziAttuali = listaImmagini;
+            indiceIndizio = 0;
+            const box = document.getElementById('contenitore-indizi');
+            box.innerHTML = ""; 
+            aggiungiImmagine(indiziAttuali[0]);
+            document.getElementById('nome-personaggio').innerText = nomeSoluzione;
+            document.getElementById('nome-personaggio').style.display = 'none';
+            document.getElementById('btn-next').disabled = false;
+            document.getElementById('btn-next').style.opacity = "1";
+            document.getElementById('overlay-personaggio').style.display = 'flex';
+        }
+
+        function aggiungiImmagine(src) {
+            const img = document.createElement('img');
+            img.src = src;
+            document.getElementById('contenitore-indizi').appendChild(img);
+        }
+
+        function prossimoIndizio() {
+            if (indiceIndizio < indiziAttuali.length - 1) {
+                indiceIndizio++;
+                aggiungiImmagine(indiziAttuali[indiceIndizio]);
+            }
+            if (indiceIndizio === indiziAttuali.length - 1) {
+                document.getElementById('btn-next').disabled = true;
+                document.getElementById('btn-next').style.opacity = "0.3";
+            }
+        }
+
+        function chiudiQuizPersonaggio() {
+            document.getElementById('overlay-personaggio').style.display = 'none';
+            if (slotAttivo) {
+                slotAttivo.style.filter = "grayscale(100%) brightness(20%)";
+                slotAttivo.style.pointerEvents = "none";
+                slotAttivo.style.borderColor = "#333";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    /* CAMBIO: Togliamo overflow: hidden e usiamo min-height invece di height fixed */
+    min-height: 100%; 
+    width: 100%;
+    overflow-y: auto; /* Permette lo scroll verticale */
+    font-family: sans-serif;
+}
+
+.background-container {
+    background-image: url('image_2.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* TRUCCO: l'immagine resta ferma mentre la griglia scorre */
+    min-height: 100vh; /* CAMBIO: Altezza minima, così può allungarsi se c'è contenuto */
+    width: 100vw;
+    display: flex;
+    flex-direction: column; /* Importante per far stare i tabelloni SOPRA la griglia */
+    align-items: flex-start; 
+    padding: 20px 50px; /* Spazio intorno */
+}
+
+.cd-grid {
+    display: grid;
+    grid-template-columns: repeat(4, clamp(180px, 18vw, 350px));
+    /* Aumentiamo l'altezza delle righe per far spazio ai punti */
+    grid-template-rows: repeat(5, auto); 
+    gap: 30px 20px; /* Più gap verticale */
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.7); 
+    border-radius: 20px;
+    align-self: center; 
+}
+
+.cd-slot {
+    /* Assicura che l'immagine stia SEMPRE dentro i bordi */
+    background-size: contain; 
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Aggiungi un po' di "aria" interna (padding) così l'immagine non tocca i bordi gialli */
+    padding: 10px; 
+    
+    background-color: whitesmoke;
+    border: 3px solid #ffcc00;
+    cursor: pointer;
+    
+    /* Queste proprietà garantiscono che la cella mantenga la forma corretta */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Importante per evitare fuoriuscite visive */
+    overflow: hidden; 
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1; /* Forza la forma quadrata */
+}
+
+.slot-usato {
+    filter: grayscale(100%) brightness(30%) !important;
+    pointer-events: none !important; /* Impedisce di cliccare di nuovo lo stesso slot */
+    border: 2px solid #555 !important;
+    opacity: 0.7;
+}
+
+/* Opzionale: aggiunge un effetto zoom quando passi sopra alle immagini */
+.cd-slot:hover {
+    transform: scale(1.1); /* Zoom più accentuato al passaggio del mouse */
+    z-index: 100;
+    box-shadow: 0 0 20px #ffcc00;
+}
+
+/* --- MECCANISMO POP-UP (OVERLAY) --- */
+
+/* Nascondiamo l'overlay di default */
+/* --- SOSTITUISCI IL BLOCCO OVERLAY CON QUESTO --- */
+.overlay-quiz {
+    display: none; 
+    position: fixed !important; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95) !important; /* Molto scuro e coprente */
+    z-index: 99999 !important;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(15px); /* Il blur lo mettiamo qui, così è più bello */
+}
+/* LA MAGIA: Quando il checkbox 'toggle' è attivo, mostra l'overlay */
+.toggle:checked ~ .overlay-quiz {
+    display: flex !important;
+}
+
+/* --- IL BOX CENTRALE --- */
+.box-quiz {
+    background: #1a1a1a !important;
+    border: 0.4vw solid #ffcc00 !important;
+    padding: 5vh 5vw !important; /* Padding proporzionale */
+    border-radius: 2vw !important;
+    text-align: center !important;
+    /* CAMBIO: Larghezza dinamica invece di fissa */
+    width: 50vw; 
+    min-width: 320px; 
+    max-width: 1200px;
+    box-shadow: 0 0 5vw rgba(0,0,0,1) !important;
+    position: relative;
+    z-index: 100000;
+}
+
+/* --- RISPOSTA E BOTTONI --- */
+
+/* Nascondiamo la risposta di default */
+.risposta-musica {
+    display: none;
+    color: #ffcc00 !important;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Mostra la risposta quando il checkbox della risposta è attivo */
+.toggle-risposta:checked + .risposta-musica {
+    display: block !important;
+}
+
+/* Stile bottoni (usando le label come bottoni) */
+.mostra-risposta-btn {
+    background-color: #007bff !important; /* BLU */
+    color: white !important;
+    padding: 15px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.chiudi-btn {
+    background-color: #ffcc00 !important; /* GIALLO */
+    color: black !important;
+    padding: 15px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.mostra-risposta-btn:hover, .chiudi-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+.box-quiz p {
+    font-size: clamp(18px, 2vw, 40px) !important;
+    margin-bottom: 3vh;
+}
+
+.contenitore-fase3 {
+    text-align: center;      
+    margin-top: 50px;        
+    margin-bottom: 50px;     
+}
+
+.btn-fase3 {
+    display: inline-block;
+    /* Padding generoso: 3% dell'altezza e 6% della larghezza schermo */
+    padding: 3vh 6vw; 
+    background-color: #ffcc00; 
+    color: #1a1a1a; 
+    
+    /* Font Serif elegante come richiesto nell'esempio */
+    font-family: "Times New Roman", Times, serif; 
+    /* Grandezza dinamica: minimo 35px, ideale 4vw, massimo 85px */
+    font-size: clamp(35px, 4vw, 85px); 
+    font-weight: bold;
+    
+    text-decoration: none; 
+    text-transform: uppercase; 
+    border: 3px solid #1a1a1a; 
+    transition: all 0.3s ease; 
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.btn-fase3:hover {
+    background-color: white; 
+    color: black;
+    transform: scale(1.05) translateY(-5px);
+    border-color: black;    
+}
+
+.trappola-usata {
+    filter: brightness(0.2) grayscale(1) !important;
+    opacity: 0.3;
+}
+th, td {
+    white-space: nowrap; /* Impedisce al testo di andare su due righe */
+}
+
+@media (max-width: 1024px) {
+    .header {
+        min-height: 150px !important; /* Più basse su tablet */
+    }
+    p {
+        font-size: 3.5vw; /* Testo domande più piccolo */
+    }
+}
+
+@media (max-width: 768px) {
+    .main-dashboard {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .box {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    .bottoni-box {
+        flex-direction: column; /* Bottoni uno sopra l'altro */
+    }
+}
+
+.container-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Spazio tra logo e casella punti */
+    width: 100%;
+}
+
+.punti-logo {
+    width: 80%; /* Leggermente più largo per ospitare numeri a 3 cifre */
+    background: rgba(26, 26, 26, 0.9); /* Sfondo scuro semitrasparente */
+    color: #ffcc00; /* Giallo coordinato con i bordi */
+    border: 3px solid #ffcc00;
+    text-align: center;
+    font-weight: 900; /* Massimo spessore del font */
+    border-radius: 10px;
+    padding: 10px 5px;
+    
+    /* Font decisamente più grande: 
+       Minimo 24px, Ideale 2.5vw dello schermo, Massimo 50px */
+    font-size: clamp(24px, 2.5vw, 50px); 
+    
+    outline: none;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); /* Effetto bagliore sul numero */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+}
+
+.punti-logo:focus {
+    background: #ffcc00;
+    color: #000;
+    transform: scale(1.1); /* Si ingrandisce leggermente quando lo modifichi */
+}

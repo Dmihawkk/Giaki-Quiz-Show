@@ -1,0 +1,223 @@
+body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        font-family: sans-serif;
+        /* SFONDO FISSO CHE NON SCOMPARE */
+        background-image: url('immagini/mhsfondo.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* Fondamentale per non farlo sparire scivolando */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+        /* SFONDO */
+        .background-fixed {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('immagini/mhsfondo.png');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            filter: brightness(0.5);
+        }
+
+        .main-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+        /* TABELLONE E CLASSIFICA */
+        .header-area {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        max-width: 1200px;
+        width: 100%;
+    }
+
+        .giocatore-box {
+        background: rgba(26, 26, 26, 0.85);
+        border: 2px solid #ffcc00;
+        padding: 10px;
+        border-radius: 10px;
+        width: 130px; /* Più stretto */
+        height: 380px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .classifica-box {
+            background: rgba(26, 26, 26, 0.9);
+            border: 4px solid #ffcc00;
+            border-radius: 15px;
+            padding: 15px;
+            flex-grow: 1;
+            max-width: 600px;
+        }
+
+        /* GRIGLIA SFIDE */
+       .container-sfide {
+    display: grid;
+    /* Crea colonne che si adattano: minimo 180px, ideale 15vw, massimo 400px per il 4K */
+    grid-template-columns: repeat(4, clamp(180px, 15vw, 400px)); 
+    justify-content: center;
+    gap: clamp(15px, 2vw, 40px); /* Spazio tra i blocchi che scala con lo schermo */
+    margin: 4vh auto;
+    padding: clamp(15px, 3vw, 50px);
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 2vw;
+    backdrop-filter: blur(5px);
+    width: fit-content;
+    max-width: 95%;
+}
+
+        .cd-slot {
+    /* Mantiene il blocco quadrato perfetto */
+    aspect-ratio: 1 / 1; 
+    width: 100%;
+    height: auto; /* Sovrascrive il valore fisso precedente */
+    border: 0.3vw solid #007bff;
+    border-radius: 1.5vw;
+    background-color: rgba(26, 26, 26, 0.7);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    /* Font che scala: piccolo su mobile, grande su 4K */
+    font-size: clamp(1.1rem, 1.5vw, 2.5rem); 
+    transition: 0.3s;
+    text-shadow: 2px 2px 5px #000;
+    box-sizing: border-box;
+}
+
+        .cd-slot:hover {
+        transform: scale(1.05);
+        border-color: #ffcc00;
+        background-color: rgba(26, 26, 26, 0.9);
+    }
+
+        /* OVERLAY / POPUP (FONDAMENTALE) */
+        #overlay-personaggio {
+    display: none; 
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    backdrop-filter: blur(10px); /* Aumenta l'immersività */
+}
+
+        .popup-content {
+    background: #1a1a1a;
+    border: 0.4vw solid #007bff; /* Bordo proporzionale allo schermo */
+    padding: clamp(20px, 3vw, 60px);
+    border-radius: 2vw;
+    text-align: center;
+    width: 90%; /* Più largo per sfruttare il 4K */
+    max-width: 1600px; /* Limite massimo per non disperdere troppo gli elementi */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+#nome-personaggio {
+    color: #00ff00;
+    /* Font gigante per la TV: da 30px a 80px */
+    font-size: clamp(30px, 4vw, 80px) !important; 
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 3vh;
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+
+.popup-content button {
+    padding: clamp(10px, 1.5vw, 25px) clamp(20px, 3vw, 50px);
+    font-size: clamp(14px, 1.2vw, 24px);
+    margin: 1vh;
+    border-radius: 0.5vw;
+    transition: 0.2s;
+}
+
+        #contenitore-indizi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(10px, 2vw, 30px);
+    flex-wrap: wrap;
+    margin: 3vh 0;
+    min-height: 40vh; /* Occupa quasi metà altezza schermo */
+}
+
+        #contenitore-indizi img {
+    /* Le immagini scalano tra 200px e 500px a seconda dello schermo */
+    width: clamp(200px, 25vw, 500px); 
+    height: auto;
+    border: 0.3vw solid #007bff;
+    border-radius: 1vw;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+        button {
+            padding: 12px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+            margin: 5px;
+        }
+.contenitore-fase4 {
+    text-align: center;      
+    margin-top: 50px;        
+    margin-bottom: 50px;     
+}
+
+.btn-fase4 {
+    display: inline-block;
+    /* Padding generoso: 3% dell'altezza e 6% della larghezza schermo */
+    padding: 3vh 6vw; 
+    background-color: #ffcc00; 
+    color: #1a1a1a; 
+    
+    /* Font Serif elegante come richiesto nell'esempio */
+    font-family: "Times New Roman", Times, serif; 
+    /* Grandezza dinamica: minimo 35px, ideale 4vw, massimo 85px */
+    font-size: clamp(35px, 4vw, 85px); 
+    font-weight: bold;
+    
+    text-decoration: none; 
+    text-transform: uppercase; 
+    border: 3px solid #1a1a1a; 
+    transition: all 0.3s ease; 
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.btn-fase4:hover {
+    background-color: white; 
+    color: black;
+    transform: scale(1.05) translateY(-5px);
+    border-color: black;    
+}
+
+.trappola-usata {
+    filter: brightness(0.2) grayscale(1) !important; /* Molto scura e senza colore */
+    pointer-events: none; /* Impedisce altri click */
+    opacity: 0.5;
+}   

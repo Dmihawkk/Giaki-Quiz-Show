@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fase 4</title>
+    <link rel="stylesheet" href="css/styles4.css">
+</head>
+<body style="background-image: url(immagini/khsfondo.jpg); background-size: cover; background-attachment: fixed; background-position: center; margin: 0; padding: 0;">
+    
+<div style="display: flex; justify-content: center; align-items: stretch; gap: 2vw; margin: 0 auto; width: 98%; padding-left: 5vw; padding-top: 20px;">
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; flex-shrink: 0;">
+        <script>
+            for(let i=1; i<=4; i++) {
+                document.write(`
+                    <div style="text-align: center; background: #1a1a1a; border: 0.3vw solid #ffcc00; padding: 1.5vh 1vw; border-radius: 1vw; width: 17vw; min-width: 220px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5);">
+                        
+                        <div style="width: 100%;">
+                            <input type="text" id="nomeG${i}" oninput="salvaNomi()" placeholder="NOME G${i}..." style="width: 90%; background: #222; color: #ffcc00; border: 1px solid #444; text-align: center; font-weight: bold; text-transform: uppercase; border-radius: 5px; padding: 8px; font-size: clamp(20px, 1.8vw, 36px);">
+                        </div>
+                        
+                        <div id="punti${i}" style="font-size: clamp(50px, 6vw, 100px); color: #ffcc00; font-weight: bold; margin: 1vh 0;">0</div>
+                        
+                        <div style="width: 100%;">
+                            <div style="color: #aaa; font-size: clamp(10px, 0.7vw, 16px); margin-bottom: 2px; letter-spacing: 2px;">VALORE</div>
+                            <input type="number" id="val${i}" value="100" style="width: 5vw; min-width: 70px; font-size: clamp(18px, 1.3vw, 30px); text-align: center; margin-bottom: 10px; border-radius: 5px; border: 1px solid #444; background: white;">
+                            
+                            <div style="display: flex; justify-content: center; gap: 0.8vw;">
+                                <button onclick="modificaPunti(${i}, 'piu')" style="background: #28a745; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">+</button>
+                                <button onclick="modificaPunti(${i}, 'meno')" style="background: #dc3545; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">-</button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        </script>
+    </div> 
+
+<div style="background: #1a1a1a; border: 0.3vw solid #ffcc00; border-radius: 1vw; padding: 1.5vw; flex-grow: 1; font-family: sans-serif; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; margin-right: 2vw;">
+        <div style="color: #ffcc00; font-size: clamp(22px, 2.2vw, 45px); font-weight: bold; text-align: center; margin-bottom: 2vh; border-bottom: 0.2vw solid #ffcc00; text-transform: uppercase; padding-bottom: 1vh;">
+            Classifica Spettatori
+        </div>
+        
+        <table style="width: 100%; color: white; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+                <tr style="font-size: clamp(20px, 1.8vw, 32px); border-bottom: 3px solid #444; color: #bbb; text-transform: uppercase; letter-spacing: 1px;">
+                    <th style="text-align: left; padding: 1.5vh 1vh; width: 35%;">NOME SPETTATORE</th>
+                    <th style="text-align: center; width: 15%;">PUNTI</th>
+                    <th style="text-align: center; width: 15%;">VALORE</th>
+                    <th style="text-align: center; width: 12%;"><a href="trappola.html">SFIDA</a></th> 
+                    <th style="text-align: right; padding-right: 1.5vw; width: 23%;">AZIONE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    for(let i=1; i<=7; i++) {
+                        document.write(`
+                            <tr style="border-bottom: 1px solid #333;">
+                                <td style="padding: 1.2vh 0.5vw;">
+                                    <input type="text" id="nomeS${i}" oninput="salvaNomi()" placeholder="Nome..." style="width: 95%; background: #222; color: white; border: 1px solid #444; padding: 0.8vh; font-weight: 900; border-radius: 0.3vw; font-size: clamp(18px, 1.6vw, 36px);">
+                                </td>
+                                <td id="puntiS${i}" style="text-align: center; font-weight: bold; color: #ffcc00; font-size: clamp(30px, 3.2vw, 65px); line-height: 1.2;">0</td>
+                                <td style="text-align: center;">
+                                    <input type="number" id="valS${i}" value="100" style="width: 70%; max-width: 100px; font-size: clamp(16px, 1.2vw, 26px); text-align: center; padding: 0.5vh; border-radius: 0.3vw; border: 1px solid #444; background: white; color: black;">
+                                </td>
+                                <td style="text-align: center;">
+                                    <span onclick="this.style.opacity='0.2'; this.style.filter='grayscale(1) shadow(0 0 0 transparent)';" 
+                                          style="font-size: clamp(35px, 3.5vw, 65px); cursor: pointer; filter: drop-shadow(0 0 10px red); display: inline-block; transition: all 0.3s; line-height: 1;">
+                                        ⚠️
+                                    </span>
+                                </td>
+                                <td style="text-align: right; padding: 1vh 1vw 1vh 0;">
+                                    <button onclick="modificaPuntiSpettatore(${i})" style="background: #28a745; color: white; border: none; padding: 1vh 0; cursor: pointer; font-weight: bold; font-size: clamp(14px, 1.1vw, 22px); border-radius: 0.5vw; width: 100%; max-width: 160px; transition: 0.2s;">
+                                        AGGIUNGI
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <div style="width: 95%; margin: 30px auto; display: block; clear: both;">
+    <div class="main-wrapper">
+        <div class="container-sfide" id="griglia"></div>
+    </div>
+
+<div class="contenitore-fase5">
+<a href="fase5.html" class="btn-fase5">VAI ALLA FASE FINALE</a>
+</div>
+
+
+<script>
+    // 1. Array modificato: Aggiunte le proprietà 'isTrappola' e 'testo'
+    const datiGiochi = [
+        // RIGA 1 (isTrappola: true = Rossa fissa, false = Verde fissa)
+        { img: 'immagini/nier.png', isTrappola: true, testo: 'NON PERVENUTO DIO FATTUCCHIERE' },
+        { img: 'immagini/b2.png', isTrappola: false,  testo: 'POSIZIONE N°100!' }, 
+        { img: 'immagini/pac.png', isTrappola: false, testo: 'POSIZIONE N°53' },
+        { img: 'immagini/lol.png', isTrappola: false, testo: 'POSIZIONE N°93' },
+        { img: 'immagini/botw.png', isTrappola: false,  testo: 'POSIZIONE N°1' },
+        
+        // RIGA 2
+        { img: 'immagini/m2.png', isTrappola: false, testo: 'POSIZIONE N°6' },
+        { img: 'immagini/ff10.png', isTrappola: true,  testo: 'NON PERVENUTO MADONNA INCORONATA' },
+        { img: 'immagini/bb.png', isTrappola: false, testo: 'POSIZIONE N°19' },
+        { img: 'immagini/mhw.png', isTrappola: false, testo: 'POSIZIONE N°85' },
+        { img: 'immagini/kh2.png', isTrappola: true,  testo: 'NON PERVENUTO GESU BEDUINO' },
+        
+        // RIGA 3
+        { img: 'immagini/p5.png', isTrappola: false, testo: 'POSIZIONE N°81' },
+        { img: 'immagini/ct.png', isTrappola: false, testo: 'POSIZIONE N°80' },
+        { img: 'immagini/ac2.png', isTrappola: true,  testo: 'NON PERVENUTO!' },
+        { img: 'immagini/fort.png', isTrappola: false, testo: 'POSIZIONE N°79' },
+        { img: 'immagini/hades.png', isTrappola: false, testo: 'POSIZIONE N°13' },
+        
+        // RIGA 4
+        { img: 'immagini/hk.png', isTrappola: false, testo: 'POSIZIONE N°54' },
+        { img: 'immagini/terr.png', isTrappola: true,  testo: 'NON PERVENUTO GODO GODO GODO GODO GODO GODO GODO GODO' },
+        { img: 'immagini/eb.png', isTrappola: false, testo: 'POSIZIONE N°50' },
+        { img: 'immagini/smw.png', isTrappola: false, testo: 'POSIZIONE N°2' },
+        { img: 'immagini/de.png', isTrappola: false, testo: 'POSIZIONE N°10' }
+];
+
+    datiGiochi.forEach((gioco) => {
+    const slot = document.createElement('div');
+    slot.className = 'cd-slot';
+    
+    slot.style.backgroundImage = `url('${gioco.img}')`;
+    slot.style.backgroundPosition = 'center';
+    
+    slot.onclick = function() {
+        if (gioco.isTrappola) {
+            this.classList.add('rosso');
+        } else {
+            this.classList.add('verde');
+        }
+        
+        const testoChiaro = document.createElement('span');
+        testoChiaro.innerText = gioco.testo;
+        
+        // Stile per far "bucare" l'opacità del verde/rosso
+        testoChiaro.style.position = "relative";
+        testoChiaro.style.zIndex = "10"; 
+        testoChiaro.style.opacity = "1"; 
+        
+        this.appendChild(testoChiaro);
+        this.style.pointerEvents = 'none';
+    }; // <--- Chiude la funzione onclick
+
+    griglia.appendChild(slot);
+});
+
+       // 1. Carica punti E nomi salvati (o array vuoti se è la prima volta)
+let punteggi = JSON.parse(localStorage.getItem('puntiG')) || [0, 0, 0, 0];
+let puntiSpettatori = JSON.parse(localStorage.getItem('puntiS')) || [0, 0, 0, 0, 0, 0, 0];
+let nomiG = JSON.parse(localStorage.getItem('nomiG')) || ["", "", "", ""];
+let nomiS = JSON.parse(localStorage.getItem('nomiS')) || ["", "", "", "", "", "", ""];
+
+// 2. Carica tutto all'avvio
+window.onload = function() {
+    // Carica dati Giocatori
+    for(let i=1; i<=4; i++) {
+        if(document.getElementById('punti' + i)) document.getElementById('punti' + i).innerText = punteggi[i-1];
+        if(document.getElementById('nomeG' + i)) document.getElementById('nomeG' + i).value = nomiG[i-1];
+    }
+    // Carica dati Spettatori
+    for(let i=1; i<=7; i++) {
+        if(document.getElementById('puntiS' + i)) document.getElementById('puntiS' + i).innerText = puntiSpettatori[i-1];
+        if(document.getElementById('nomeS' + i)) document.getElementById('nomeS' + i).value = nomiS[i-1];
+    }
+};
+
+// 3. Funzione per salvare i nomi (chiamata ogni volta che scrivi)
+function salvaNomi() {
+    for(let i=1; i<=4; i++) {
+        nomiG[i-1] = document.getElementById('nomeG' + i).value;
+    }
+    for(let i=1; i<=7; i++) {
+        nomiS[i-1] = document.getElementById('nomeS' + i).value;
+    }
+    localStorage.setItem('nomiG', JSON.stringify(nomiG));
+    localStorage.setItem('nomiS', JSON.stringify(nomiS));
+}
+
+// 4. Funzioni punti (rimangono quasi uguali)
+function modificaPunti(numGiocatore, operazione) {
+    let valore = parseInt(document.getElementById('val' + numGiocatore).value) || 0;
+    punteggi[numGiocatore - 1] += (operazione === 'piu' ? valore : -valore);
+    document.getElementById('punti' + numGiocatore).innerText = punteggi[numGiocatore - 1];
+    localStorage.setItem('puntiG', JSON.stringify(punteggi));
+}
+
+function modificaPuntiSpettatore(num) {
+    let valore = parseInt(document.getElementById('valS' + num).value) || 0;
+    puntiSpettatori[num-1] += valore;
+    document.getElementById('puntiS' + num).innerText = puntiSpettatori[num-1];
+    localStorage.setItem('puntiS', JSON.stringify(puntiSpettatori));
+}
+
+</script>
+</body>
+</html>

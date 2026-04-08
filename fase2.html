@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fase 2</title>
+    <link rel="stylesheet" href="css/styles2.css">
+</head>
+<body style="background-image: url(immagini/dante.png); background-size: cover; background-attachment: fixed; background-position: center; margin: 0; padding: 0;">
+
+    <div style="display: flex; justify-content: center; align-items: stretch; gap: 2vw; margin: 0 auto; width: 98%; padding-left: 5vw; padding-top: 20px;">
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; flex-shrink: 0;">
+        <script>
+            for(let i=1; i<=4; i++) {
+                document.write(`
+                    <div style="text-align: center; background: #1a1a1a; border: 0.3vw solid #ffcc00; padding: 1.5vh 1vw; border-radius: 1vw; width: 17vw; min-width: 220px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5);">
+                        
+                        <div style="width: 100%;">
+                            <input type="text" id="nomeG${i}" oninput="salvaNomi()" placeholder="NOME G${i}..." style="width: 90%; background: #222; color: #ffcc00; border: 1px solid #444; text-align: center; font-weight: bold; text-transform: uppercase; border-radius: 5px; padding: 8px; font-size: clamp(20px, 1.8vw, 36px);">
+                        </div>
+                        
+                        <div id="punti${i}" style="font-size: clamp(50px, 6vw, 100px); color: #ffcc00; font-weight: bold; margin: 1vh 0;">0</div>
+                        
+                        <div style="width: 100%;">
+                            <div style="color: #aaa; font-size: clamp(10px, 0.7vw, 16px); margin-bottom: 2px; letter-spacing: 2px;">VALORE</div>
+                            <input type="number" id="val${i}" value="100" style="width: 5vw; min-width: 70px; font-size: clamp(18px, 1.3vw, 30px); text-align: center; margin-bottom: 10px; border-radius: 5px; border: 1px solid #444; background: white;">
+                            
+                            <div style="display: flex; justify-content: center; gap: 0.8vw;">
+                                <button onclick="modificaPunti(${i}, 'piu')" style="background: #28a745; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">+</button>
+                                <button onclick="modificaPunti(${i}, 'meno')" style="background: #dc3545; color: white; border: none; padding: 0.8vh 0; width: 4.5vw; min-width: 50px; cursor: pointer; font-size: clamp(18px, 1.8vw, 35px); font-weight: bold; border-radius: 8px;">-</button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        </script>
+    </div>
+
+    <div style="background: #1a1a1a; border: 0.3vw solid #ffcc00; border-radius: 1vw; padding: 1.5vw; flex-grow: 1; font-family: sans-serif; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; margin-right: 2vw;">
+        <div style="color: #ffcc00; font-size: clamp(22px, 2.2vw, 45px); font-weight: bold; text-align: center; margin-bottom: 2vh; border-bottom: 0.2vw solid #ffcc00; text-transform: uppercase; padding-bottom: 1vh;">
+            Classifica Spettatori
+        </div>
+        
+        <table style="width: 100%; color: white; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+                <tr style="font-size: clamp(20px, 1.8vw, 32px); border-bottom: 3px solid #444; color: #bbb; text-transform: uppercase; letter-spacing: 1px;">
+                    <th style="text-align: left; padding: 1.5vh 1vh; width: 35%;">NOME SPETTATORE</th>
+                    <th style="text-align: center; width: 15%;">PUNTI</th>
+                    <th style="text-align: center; width: 15%;">VALORE</th>
+                    <th style="text-align: center; width: 12%;"><a href="trappola.html">SFIDA</a></th> 
+                    <th style="text-align: right; padding-right: 1.5vw; width: 23%;">AZIONE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    for(let i=1; i<=7; i++) {
+                        document.write(`
+                            <tr style="border-bottom: 1px solid #333;">
+                                <td style="padding: 1.2vh 0.5vw;">
+                                    <input type="text" id="nomeS${i}" oninput="salvaNomi()" placeholder="Nome..." style="width: 95%; background: #222; color: white; border: 1px solid #444; padding: 0.8vh; font-weight: 900; border-radius: 0.3vw; font-size: clamp(18px, 1.6vw, 36px);">
+                                </td>
+                                <td id="puntiS${i}" style="text-align: center; font-weight: bold; color: #ffcc00; font-size: clamp(30px, 3.2vw, 65px); line-height: 1.2;">0</td>
+                                <td style="text-align: center;">
+                                    <input type="number" id="valS${i}" value="100" style="width: 70%; max-width: 100px; font-size: clamp(16px, 1.2vw, 26px); text-align: center; padding: 0.5vh; border-radius: 0.3vw; border: 1px solid #444; background: white; color: black;">
+                                </td>
+                                <td style="text-align: center;">
+                                    <span onclick="this.style.opacity='0.2'; this.style.filter='grayscale(1) shadow(0 0 0 transparent)';" 
+                                          style="font-size: clamp(35px, 3.5vw, 65px); cursor: pointer; filter: drop-shadow(0 0 10px red); display: inline-block; transition: all 0.3s; line-height: 1;">
+                                        ⚠️
+                                    </span>
+                                </td>
+                                <td style="text-align: right; padding: 1vh 1vw 1vh 0;">
+                                    <button onclick="modificaPuntiSpettatore(${i})" style="background: #28a745; color: white; border: none; padding: 1vh 0; cursor: pointer; font-weight: bold; font-size: clamp(14px, 1.1vw, 22px); border-radius: 0.5vw; width: 100%; max-width: 160px; transition: 0.2s;">
+                                        AGGIUNGI
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <div class="background-container">
+        <div class="cd-grid">
+            <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/kh.png);" onclick="apriIlQuiz(this, 'audio/kh.mp3', 'Kingdom Hearts 2 - Xemnas Dragon Form ')"> </div>
+        <input type="number" class="punti-logo" value="400"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/mh.png);" onclick="apriIlQuiz(this, 'audio/mh.mp3', 'MH Rise - Kamura Village')"></div>
+        <input type="number" class="punti-logo" value="200"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/op.png);" onclick="apriIlQuiz(this, 'audio/op.mp3', 'Marineford - OP13')"></div>
+        <input type="number" class="punti-logo" value="200"></div>    
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/naruto.png);" onclick="apriIlQuiz(this, 'audio/naruto.mp3', 'Naruto the Last/Boruto - Momoshiki Fight')"></div>
+        <input type="number" class="punti-logo" value="600"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/lotr.png);" onclick="apriIlQuiz(this, 'audio/lotr.mp3', 'Il ritorno del Re - The Battle of the Pelennor Fields')"></div>
+        <input type="number" class="punti-logo" value="600"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/hp.png);" onclick="apriIlQuiz(this, 'audio/hp.mp3', 'Harry Potter e il Calice di Fuoco - Quidditch World Cup')"></div>
+        <input type="number" class="punti-logo" value="400"></div>
+        <div class="container-slot"> 
+        <div class="cd-slot" style="background-image: url(immagini/dbz.png);" onclick="apriIlQuiz(this, 'audio/dbz.mp3', 'DBZ Budokai 3 - Opening')"></div>
+        <input type="number" class="punti-logo" value="400"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/marvel.png);" onclick="apriIlQuiz(this, 'audio/marvel.mp3', 'Avengers Endgame - Avengers Assemble')"></div>
+        <input type="number" class="punti-logo" value="600"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/ac.png);" onclick="apriIlQuiz(this, 'audio/ac.mp3', 'Assassins Creed 2 - Main Theme')"></div>
+        <input type="number" class="punti-logo" value="200"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/tlou.png);" onclick="apriIlQuiz(this, 'audio/tlou.mp3', 'The Last of Us - Main Theme')"></div>
+        <input type="number" class="punti-logo" value="200"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/ff.png);" onclick="apriIlQuiz(this, 'audio/ff.mp3', 'Final Fantasy 7 - JENOVA')"></div>
+        <input type="number" class="punti-logo" value="400"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/wow.png);" onclick="apriIlQuiz(this, 'audio/wow.mp3', 'Wrath of the Lich King - Arthas Theme')"></div>
+        <input type="number" class="punti-logo" value="600"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/tes.png);" onclick="apriIlQuiz(this, 'audio/tes.mp3', 'Skyrim - Whiterun')"></div>
+        <input type="number" class="punti-logo" value="600"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/aot.png);" onclick="apriIlQuiz(this, 'audio/aot.mp3', 'AoT S1/S2 - Mikasa/Sasha')"></div>
+        <input type="number" class="punti-logo" value="600"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/fate.png);" onclick="apriIlQuiz(this, 'audio/fate.mp3', 'Fate Unlimited Blade Works - Ending 1')"></div>
+        <input type="number" class="punti-logo" value="200"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/dmc.png);" onclick="apriIlQuiz(this, 'audio/dmc.mp3', 'DMC 4 - Ending/Credits')"></div>
+        <input type="number" class="punti-logo" value="400"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/hero.png);" onclick="apriIlQuiz(this, 'audio/hero.mp3', 'Season 2 - Opening 2')"></div>
+        <input type="number" class="punti-logo" value="200"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/eva.png);" onclick="apriIlQuiz(this, 'audio/eva.mp3', 'Evangelion serie - scena finale')"></div>
+        <input type="number" class="punti-logo" value="400"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/sao.png);" onclick="apriIlQuiz(this, 'audio/sao.mp3', 'Ordinal Scale - Final Boss Fight')"></div>
+        <input type="number" class="punti-logo" value="400"></div>
+        <div class="container-slot">
+        <div class="cd-slot" style="background-image: url(immagini/demon.png);" onclick="apriIlQuiz(this, 'audio/demon.mp3', 'Stagione 4 - Castello dell Infinito')"></div>
+        <input type="number" class="punti-logo" value="400"></div>
+        </div>
+    </div>
+
+    <div id="overlay-universale" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(10px);">
+    <div style="background: #1a1a1a; border: 0.4vw solid #ffcc00; padding: 5vh 4vw; border-radius: 2vw; text-align: center; width: 60vw; max-width: 1400px; box-shadow: 0 0 80px black;">
+        
+        <p style="color: white; font-size: clamp(28px, 2.5vw, 55px); margin-bottom: 4vh; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+            Indovina questa colonna sonora!
+        </p>
+        
+        <audio id="player-quiz" controls style="width: 100%; height: clamp(60px, 10vh, 120px); margin-bottom: 5vh; transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255,204,0,0.3));"></audio>
+        
+        <div id="risposta-quiz" style="display: none; color: #ffcc00; font-size: clamp(35px, 4.5vw, 90px); font-weight: bold; margin-bottom: 5vh; text-shadow: 0 0 20px rgba(255, 204, 0, 0.4);"></div>
+        
+        <div style="display: flex; gap: 3vw; justify-content: center;">
+            <button onclick="document.getElementById('risposta-quiz').style.display='block'" 
+                    style="background: #007bff; color: white; border: none; padding: 2.5vh 3.5vw; font-size: clamp(20px, 1.8vw, 38px); font-weight: bold; cursor: pointer; border-radius: 1vw; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,123,255,0.4);">
+                MOSTRA RISPOSTA
+            </button>
+            <button onclick="chiudiQuiz()" 
+                    style="background: #dc3545; color: white; border: none; padding: 2.5vh 3.5vw; font-size: clamp(20px, 1.8vw, 38px); font-weight: bold; cursor: pointer; border-radius: 1vw; transition: 0.3s; box-shadow: 0 5px 15px rgba(220,53,69,0.4);">
+                CHIUDI
+            </button>
+        </div>
+    </div>
+</div>
+
+    <div class="contenitore-fase3">
+<a href="fase3.html" class="btn-fase3">VAI ALLA FASE 3</a>
+</div>
+<script>
+       // 1. Carica punti E nomi salvati (o array vuoti se è la prima volta)
+let punteggi = JSON.parse(localStorage.getItem('puntiG')) || [0, 0, 0, 0];
+let puntiSpettatori = JSON.parse(localStorage.getItem('puntiS')) || [0, 0, 0, 0, 0, 0, 0];
+let nomiG = JSON.parse(localStorage.getItem('nomiG')) || ["", "", "", ""];
+let nomiS = JSON.parse(localStorage.getItem('nomiS')) || ["", "", "", "", "", "", ""];
+
+// 2. Carica tutto all'avvio
+window.onload = function() {
+    // Carica dati Giocatori
+    for(let i=1; i<=4; i++) {
+        if(document.getElementById('punti' + i)) document.getElementById('punti' + i).innerText = punteggi[i-1];
+        if(document.getElementById('nomeG' + i)) document.getElementById('nomeG' + i).value = nomiG[i-1];
+    }
+    // Carica dati Spettatori
+    for(let i=1; i<=7; i++) {
+        if(document.getElementById('puntiS' + i)) document.getElementById('puntiS' + i).innerText = puntiSpettatori[i-1];
+        if(document.getElementById('nomeS' + i)) document.getElementById('nomeS' + i).value = nomiS[i-1];
+    }
+};
+
+// 3. Funzione per salvare i nomi (chiamata ogni volta che scrivi)
+function salvaNomi() {
+    for(let i=1; i<=4; i++) {
+        nomiG[i-1] = document.getElementById('nomeG' + i).value;
+    }
+    for(let i=1; i<=7; i++) {
+        nomiS[i-1] = document.getElementById('nomeS' + i).value;
+    }
+    localStorage.setItem('nomiG', JSON.stringify(nomiG));
+    localStorage.setItem('nomiS', JSON.stringify(nomiS));
+}
+
+// 4. Funzioni punti (rimangono quasi uguali)
+function modificaPunti(numGiocatore, operazione) {
+    let valore = parseInt(document.getElementById('val' + numGiocatore).value) || 0;
+    punteggi[numGiocatore - 1] += (operazione === 'piu' ? valore : -valore);
+    document.getElementById('punti' + numGiocatore).innerText = punteggi[numGiocatore - 1];
+    localStorage.setItem('puntiG', JSON.stringify(punteggi));
+}
+
+function modificaPuntiSpettatore(num) {
+    let valore = parseInt(document.getElementById('valS' + num).value) || 0;
+    puntiSpettatori[num-1] += valore;
+    document.getElementById('puntiS' + num).innerText = puntiSpettatori[num-1];
+    localStorage.setItem('puntiS', JSON.stringify(puntiSpettatori));
+}
+        // FUNZIONI QUIZ MUSICALE
+        function apriIlQuiz(cella, audioSrc, risposta) {
+            cella.classList.add('trappola-usata'); // Usa la tua classe CSS per scurire il CD
+            document.getElementById('player-quiz').src = audioSrc;
+            document.getElementById('risposta-quiz').innerText = risposta;
+            document.getElementById('risposta-quiz').style.display = 'none';
+            document.getElementById('overlay-universale').style.display = 'flex';
+            document.getElementById('player-quiz').play();
+        }
+
+        function chiudiQuiz() {
+            document.getElementById('player-quiz').pause();
+            document.getElementById('overlay-universale').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

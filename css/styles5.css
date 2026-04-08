@@ -1,0 +1,323 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+    background: #050505; 
+    color: white; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* CONTENITORE PADRE: Impedisce sovrapposizioni */
+.main-wrapper {
+    display: flex;
+    justify-content: center; /* Centra tutto il blocco */
+    align-items: flex-start;
+    gap: 3vw;                /* Crea lo spazio tra griglia e classifica */
+    width: 90%;              /* Non 100%, così lo sfondo respira ai lati */
+    margin: 0 auto;          /* Centra il blocco nella pagina */
+    padding: 20px;
+}
+
+/* GRIGLIA: Occupazione fissa del 70% della larghezza */
+.container-labirinto {
+    flex: 0 0 70%; 
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+    background: #111;
+    padding: 20px;
+    border: 5px solid #ffcc00;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+}
+
+/* CASELLA: Quadrata e colorata */
+.casella {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    /* Font fluido: scala tra 16px e 60px in base allo schermo */
+    font-size: clamp(16px, 3vw, 60px); 
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    text-shadow: 2px 2px 5px rgba(0,0,0,1);
+}
+
+/* COLORI CATEGORIE (FORZATI) */
+.cat-storia { background-color: #ff0000 !important; }
+.cat-boss { background-color: #007bff !important; }
+.cat-oggetti { background-color: #ffffff !important; color: black !important; }
+.cat-mappe { background-color: #00ff00 !important; color: black !important; }
+.cat-lore { background-color: #ff8800 !important; }
+.cat-bonus { background-color: #9900ff !important; }
+
+/* SIDEBAR: Occupazione fissa del 28% della larghezza */
+.sidebar-destra {
+    flex: 0 0 28%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-destra h2 {
+    font-size: clamp(18px, 2vw, 45px) !important;
+    padding-bottom: 10px;
+}
+
+.box-stile {
+    background: rgba(20, 20, 20, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+}
+
+.legenda-box { border: 4px solid #ffcc00; }
+
+.legenda-item {
+    display: flex; 
+    align-items: center; 
+    gap: 1vw; 
+    margin-bottom: 1vh; 
+    color: white; 
+    font-weight: bold;
+    font-size: clamp(14px, 1.5vw, 35px); /* Testo legenda scala col 4K */
+}
+
+.legenda-color-box {
+    width: clamp(20px, 2.5vw, 50px); 
+    height: clamp(20px, 2.5vw, 50px); 
+    border: 2px solid #fff; 
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.giocatori-box, .dadi-box { border: 4px solid #007bff; }
+
+/* DADI: Layout a griglia pulito */
+.grid-dadi {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-dado {
+    background: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+    /* Aumentato il padding per dare spazio al testo più grande */
+    padding: 20px 10px; 
+    font-weight: 900;
+    /* Font fluido: parte da 20px e arriva fino a 45px su schermi grandi */
+    font-size: clamp(20px, 2vw, 45px) !important;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-dado:hover {
+    background: #007bff;
+    color: white;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+}
+
+/* RESPONSIVITÀ PER MONITOR PICCOLI */
+@media (max-width: 1200px) {
+    .main-wrapper { flex-direction: column; align-items: center; }
+    .container-labirinto, .sidebar-destra { flex: 0 0 100%; width: 95vw; }
+}
+
+.giocatore-container {
+    margin-bottom: 3vh; 
+    background: rgba(255,255,255,0.05); 
+    padding: 1vw; 
+    border-radius: 8px;
+}
+
+.giocatore-nome {
+    background:transparent; 
+    border:none; 
+    border-bottom:1px solid #444; 
+    color:white; 
+    font-weight:bold; 
+    width:100%; 
+    margin-bottom:1vh; 
+    text-transform: uppercase;
+    font-size: clamp(14px, 1.3vw, 30px);
+}
+
+.segmento-colore {
+    flex:1; 
+    height: clamp(15px, 2vh, 40px); /* Segmenti colorati più alti su 4K */
+    border-radius: 3px; 
+    filter: brightness(0.2); 
+    cursor: pointer; 
+    transition: 0.3s; 
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-nav {
+    padding: 0.8vh 1.2vw; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    font-weight: bold; 
+    font-size: clamp(12px, 1vw, 25px);
+    transition: 0.3s;
+}
+
+/* Risultato Dado Enorme */
+#risultato-dado {
+    font-size: clamp(50px, 8vw, 150px) !important;
+    font-weight: bold;
+}
+
+#quiz-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; 
+    height: 100vh;
+    background: rgba(10, 10, 10, 0.99); /* Nero quasi totale */
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100000;
+}
+
+#categoria-titolo {
+    color: #ffcc00;
+    font-family: 'Georgia', serif;
+    font-size: 8vw; /* TESTO ENORME */
+    letter-spacing: 1vw;
+    margin: 0;
+    text-transform: uppercase;
+    text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+}
+
+#testo-domanda {
+    color: #ffffff;
+    font-size: 5vw; /* TESTO DOMANDA GIGANTE */
+    line-height: 1.2;
+    margin-bottom: 8vh;
+    font-family: 'Verdana', sans-serif;
+    padding: 0 5vw;
+}
+
+.quiz-footer {
+    display: flex;
+    gap: 5vw;
+    justify-content: center;
+    margin-top: auto; /* Fondamentale: lo ancora al fondo del contenitore */
+    padding-bottom: 2vh;
+}
+
+#btn-mostra {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#btn-chiudi {
+    background-color: #ffcc00;
+    color: black;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.quiz-content {
+    width: 90vw;
+    height: 95vh; /* Forza il contenuto a stare dentro l'altezza della TV */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Spinge i bottoni in fondo e il titolo in alto */
+    align-items: center;
+    padding: 2vh 0;
+}
+
+.divider {
+    width: 80%;
+    border: 0;
+    border-top: 0.5vw solid #ffcc00; /* Linea spessa e gialla */
+    margin: 2vh auto 5vh auto;
+}
+
+#area-risposta {
+    display: none;
+    color: #ffcc00;
+    font-family: 'Georgia', serif;
+    font-size: 5vw; /* Dimensione grande ma non folle */
+    font-weight: bold;
+    
+    /* LIMITI PER EVITARE IL TAGLIO DEI BOTTONI */
+    max-height: 40vh; 
+    overflow-y: auto; /* Se il testo è troppo lungo, crea una scrollbar interna invece di spingere giù tutto */
+    
+    width: 80%;
+    margin: 2vh auto;
+    padding: 20px;
+    border: 0.3vw solid #ffcc00;
+    background: rgba(255, 204, 0, 0.05);
+    text-align: center;
+}
+
+.btn-mostra, .btn-chiudi {
+    padding: 2vh 5vw;
+    font-size: 3vw; /* PULSANTI ENORMI */
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    border-radius: 1vw;
+}
+
+.btn-mostra { background-color: #007bff; color: white; box-shadow: 0 10px 30px rgba(0,123,255,0.4); }
+.btn-chiudi { background-color: #ffcc00; color: black; box-shadow: 0 10px 30px rgba(255,204,0,0.4); }
+
+.casella.visitata {
+    background-image: none !important; /* Toglie eventuale colore di sfondo */
+    background-color: #111 !important; /* Colore scurissimo di base */
+    border-color: #444 !important;
+    cursor: default;
+}
+
+.btn-dado.oscurato {
+    filter: grayscale(1) brightness(0.2) !important;
+    border-color: #444 !important;
+    color: #444 !important;
+    box-shadow: none !important;
+}
+
+.casella.visitata span {
+    filter: grayscale(1) brightness(0.5);
+    opacity: 0.5;
+}
+
+.casella.visitata .pedine-container {
+    filter: none !important;
+    opacity: 1 !important;
+    z-index: 10; /* Le tiene sopra l'oscuramento */
+}
+
+#immagine-domanda {
+    width: 100%;
+    height: auto;
+    object-fit: contain; /* Mantiene le proporzioni senza tagliare l'immagine */
+}
