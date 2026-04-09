@@ -142,15 +142,32 @@ body {
 }
 
 .giocatore-nome {
-    background:transparent; 
-    border:none; 
-    border-bottom:1px solid #444; 
-    color:white; 
-    font-weight:bold; 
-    width:100%; 
-    margin-bottom:1vh; 
-    text-transform: uppercase;
-    font-size: clamp(14px, 1.3vw, 30px);
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    
+    /* Dimensioni aumentate per leggibilità TV/Monitor */
+    font-size: 28px !important; 
+    font-weight: 800 !important; 
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    
+    /* Spaziature */
+    height: 50px !important;
+    line-height: 50px !important;
+    width: 100% !important;
+    margin-bottom: 15px !important;
+    padding: 0 5px !important;
+    
+    display: block !important;
+    outline: none !important;
+    font-family: 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.giocatore-nome:focus {
+    border-bottom: 2px solid #007bff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
 }
 
 .segmento-colore {
