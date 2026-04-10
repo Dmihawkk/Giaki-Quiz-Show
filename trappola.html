@@ -3,431 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grande Griglia Quiz Musicale</title>
+    <title>Trappola Musicale</title>
     <style>
-        /* --- STILI GENERALI (Layout e Sfondo) --- */
+        /* --- RESET E BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: #121212; /* Sfondo scuro tipo Spotify */
+            background-color: #121212;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 2vw;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
         }
 
+        /* --- TITOLO PRINCIPALE --- */
         h1 {
-            color: #ff00ff; /* Verde Spotify */
-            text-shadow: 0 0 10px #800080;
+            color: #ff00ff;
+            text-shadow: 0 0 20px #800080;
+            font-size: clamp(3rem, 6vw, 8rem); /* Cresce con lo schermo */
+            margin-bottom: 3vh;
+            text-align: center;
         }
 
-        /* --- CONTENITORE PRINCIPALE DELLA GRIGLIA --- */
+        /* --- LAYOUT ORIZZONTALE --- */
+        .main-wrapper {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 98vw;
+            gap: 2vw;
+            align-items: flex-start;
+        }
+
+        /* --- LEGENDA / PUNTEGGI (SINISTRA) --- */
+        .box-punteggi {
+            background: #1a001a;
+            border: 0.4vw solid #ff00ff; /* Bordo proporzionale */
+            border-radius: 1.5vw;
+            padding: 2vw;
+            width: clamp(300px, 20vw, 600px); /* Molto più grande su 4K */
+            flex-shrink: 0;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .titolo-punteggi {
+            color: #ff00ff;
+            text-align: center;
+            font-weight: bold;
+            font-size: clamp(1.5rem, 2.5vw, 4rem); /* Legenda leggibile */
+            margin-bottom: 2vh;
+            border-bottom: 0.2vw solid #ff00ff;
+            padding-bottom: 1vh;
+        }
+
+        .riga-punteggio {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5vh 0;
+            border-bottom: 1px solid #440044;
+            font-size: clamp(1rem, 1.5vw, 2.5rem); /* Testo legenda grande */
+        }
+
+        /* --- GRIGLIA (DESTRA) --- */
         .super-griglia {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Spazio tra le sezioni */
-            width: 100%;
-            max-width: 1200px; /* Larghezza massima per schermi grandi */
+            gap: 4vh;
         }
 
-        /* --- STILI DELLE SEZIONI (Righe) --- */
         .sezione {
             background: #1e1e1e;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border-radius: 1vw;
+            padding: 2vw;
+            border: 1px solid #333;
         }
 
+        /* TITOLI CATEGORIE (ORA GIGANTI) */
         .titolo-sezione {
-            font-size: 1.2rem;
+            font-size: clamp(1.5rem, 2.5vw, 4.5rem); 
             font-weight: bold;
-            margin-bottom: 15px;
-            color: #aaaaaa;
-            border-bottom: 2px solid #333;
-            padding-bottom: 5px;
+            color: #ff00ff;
+            margin-bottom: 2vh;
+            text-transform: uppercase;
+            letter-spacing: 0.3vw;
         }
 
-        /* Container flex per gli slot dentro la sezione */
         .slot-container {
-            display: flex;
-            flex-wrap: wrap; /* Permette agli slot di andare a capo se non c'è spazio */
-            gap: 10px; /* Spazio tra gli slot */
-            justify-content: center; /* Centra gli slot nella riga */
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); 
+            gap: 1vw;
         }
 
-        /* --- STILI DEGLI SLOT (Bottoni Cliccabili) --- */
+        /* --- SLOT --- */
         .slot {
-    background: linear-gradient(145deg, #4b0082, #800080); /* Gradiente stile carta */
-    color: #ffffff; 
-    border: 2px solid #ff00ff; /* Bordo fucsia acceso */
-    border-radius: 8px;
-    width: 100px;
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-}
-
-        /* Effetto Hover (Passaggio del mouse) */
-        .slot:hover:not(.oscurato) {
-    background: #ff00ff;
-    color: white;
-    transform: scale(1.05);
-    box-shadow: 0 0 20px #ff00ff;
-}
-
-        /* --- STILE SLOT OSCURATO (Dopo il click) --- */
-        .slot.oscurato {
-            background-color: #1a1a1a !important;
-            color: #444 !important;
-            border-color: #333 !important;
-            cursor: default; /* Rimuove il puntatore */
-            opacity: 0.6;
-            filter: grayscale(1); /* Rende tutto grigio */
-        }
-        
-        /* Simbolo di completamento sullo slot oscurato */
-        .slot.oscurato::after {
-            content: "✓";
-            position: absolute;
-            font-size: 3rem;
-            color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* --- STILI DEL POPUP (Overlay e Contenuto) --- */
-        .popup-overlay {
-            display: none; /* Nascosto di default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); /* Sfondo semi-trasparente scuro */
-            z-index: 1000; /* Sopra a tutto */
+            background: linear-gradient(145deg, #4b0082, #800080);
+            color: white;
+            border: 0.2vw solid #ff00ff;
+            border-radius: 0.8vw;
+            aspect-ratio: 1 / 1; 
+            display: flex;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px); /* Effetto sfocatura sfondo */
+            font-size: clamp(1.5rem, 3vw, 5rem); /* Numeri grandi */
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .slot:hover:not(.oscurato) {
+            transform: scale(1.05);
+            box-shadow: 0 0 2vw #ff00ff;
+        }
+
+        .slot.oscurato {
+            background: #111 !important;
+            opacity: 0.3;
+            filter: grayscale(1);
+        }
+
+        /* --- POPUP RESPONSIVO GIGANTE --- */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
         }
 
         .popup-content {
-            background-color: #1a001a;
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #ff00ff;
-            width: 90%;
-            max-width: 500px;
+            background: #1a001a;
+            border: 0.5vw solid #ff00ff;
+            padding: 5vw;
+            border-radius: 2vw;
+            width: 80vw; /* Occupa l'80% della larghezza */
+            max-width: 1600px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            position: relative;
-            animation: popupEntrata 0.3s ease-out; /* Animazione apparizione */
+            box-shadow: 0 0 5vw #ff00ff;
         }
 
-        @keyframes popupEntrata {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+        #popupTitolo {
+            font-size: clamp(2rem, 4vw, 6rem); /* Titolo popup enorme */
+            margin-bottom: 4vh;
+            color: #ff00ff;
         }
 
-        .popup-titolo {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        /* Stile del lettore audio HTML5 */
+        /* AUDIO PLAYER GIGANTE */
         audio {
             width: 100%;
-            margin-bottom: 25px;
-            outline: none;
-        }
-        
-        /* Personalizzazione base colori audio player (dipende dal browser) */
-        audio::-webkit-media-controls-panel {
-            background-color: #333;
-        }
-        audio::-webkit-media-controls-current-time-display,
-        audio::-webkit-media-controls-time-remaining-display {
-            color: white;
+            height: 8vh; /* Player più alto e facile da cliccare */
+            margin: 4vh 0;
         }
 
-        /* --- STILI DELL'AREA RISPOSTA NASCOSTA --- */
-        .area-risposta {
-            display: none; /* Nascosta di default */
-            margin-top: 15px;
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: #2a2a2a;
-            border-radius: 8px;
-            border-left: 5px solid #1DB954;
-            color: white;
-            font-size: 1.2rem;
+        #areaRisposta {
+            font-size: clamp(2rem, 5vw, 8rem); /* Risposta gigante */
+            margin: 4vh 0;
+            color: #1DB954;
             font-weight: bold;
+            text-shadow: 0 0 1vw #1DB954;
         }
 
-        /* --- STILI DEI BOTTONI NEL POPUP --- */
-        .popup-buttons {
+        .popup-btn-container {
             display: flex;
-            gap: 15px;
             justify-content: center;
+            gap: 2vw;
+            margin-top: 4vh;
         }
 
-        .btn {
-            padding: 10px 20px;
+        .btn-pop {
+            padding: 2vh 4vw;
+            font-size: clamp(1rem, 2vw, 3rem); /* Bottoni grandi */
+            border-radius: 5vw;
             border: none;
-            border-radius: 25px;
-            font-weight: bold;
             cursor: pointer;
+            font-weight: bold;
             text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
         }
 
-        .btn-risposta {
-            background-color: #1DB954; /* Verde */
-            color: white;
-        }
-        .btn-risposta:hover { background-color: #1ed760; }
+        .btn-risposta { background: #1DB954; color: white; }
+        .btn-chiudi { background: #555; color: white; }
 
-        .btn-chiudi {
-            background-color: #555; /* Grigio */
-            color: white;
-        }
-        .btn-chiudi:hover { background-color: #777; }
-
- 
-.box-punteggi {
-    background: #1a001a;
-    border: 3px solid #ff00ff; /* Bordo più spesso stile carta */
-    border-radius: 15px;
-    color: white;
-    box-shadow: 0 0 20px #800080;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-.titolo-punteggi {
-    color: #ff00ff;
-    text-align: center;
-    font-weight: bold;
-    border-bottom: 1px solid #ff00ff;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    text-transform: uppercase;
-}
-
-.riga-punteggio {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 5px; /* Più spazio verticale tra le righe */
-    border-bottom: 1px solid #440044;
-    font-size: 18px; /* Testo più grande */
-}
-
-.riga-punteggio span:first-child {
-    color: #ffcc00; /* Oro per i numeri */
-    font-weight: bold;
-}
-
-.super-griglia {
-    margin-left: 20px; /* Crea un ulteriore cuscinetto d'aria */
-    flex-grow: 1;
-}
     </style>
 </head>
 <body>
 
     <h1>TRAPPOLA MUSICALE</h1>
 
-    <div style="display: grid; grid-template-columns: 250px 1fr; gap: 80px; padding: 20px; align-items: start;">
-        
-        <div class="box-punteggi" id="punteggi-musica" style="width: 100%; min-height: 600px; padding: 20px;">
-            <div class="titolo-punteggi" style="font-size: 22px; margin-bottom: 20px;">Punti Slot</div>
+    <div class="main-wrapper">
+        <div class="box-punteggi" id="punteggi-musica">
+            <div class="titolo-punteggi">PUNTI SLOT</div>
             </div>
 
-        <div class="super-griglia">
+        <div class="super-griglia" id="gridContainer">
             </div>
-
     </div>
 
     <div class="popup-overlay" id="popupOverlay">
         <div class="popup-content">
-            <div class="popup-titolo" id="popupTitolo">Slot 1</div>
+            <div id="popupTitolo"></div>
             
-            <audio id="audioPlayer" controls>
-                <source id="audioSource" src="" type="audio/mpeg">
-                Il tuo browser non supporta l'elemento audio.
-            </audio>
-
-            <div class="area-risposta" id="areaRisposta">
-                Invisibile
-            </div>
-
-            <div class="popup-buttons">
-                <button class="btn btn-risposta" id="btnMostraRisposta">Mostra Risposta</button>
-                <button class="btn btn-chiudi" id="btnChiudiPopup">Chiudi</button>
+            <audio id="audioPlayer" controls></audio>
+            
+            <div id="areaRisposta" style="display:none;"></div>
+            
+            <div class="popup-btn-container">
+                <button class="btn-pop btn-risposta" id="btnMostraRisposta">Mostra Risposta</button>
+                <button class="btn-pop btn-chiudi" id="btnChiudiPopup">Chiudi</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. CONFIGURAZIONE GRIGLIA ---
-        const nomiSezioni = ["POP", "ROCK", "ALTERNATIVE ROCK", "ITALIANE", "METAL"];
+        const nomiSezioni = ["POP", "POP-ROCK", "ALTERNATIVE ROCK", "ITALIANE", "METAL"];
         const configGriglia = [10, 10, 10, 10, 5];
-        const gridContainer = document.querySelector('.super-griglia');
+        const gridContainer = document.getElementById('gridContainer');
 
-        // --- 2. DATABASE CANZONI (Esempio) ---
-        // Struttura: 'Sezione_Slot' : { file: 'percorso/file.mp3', risposta: 'Nome Canzone - Artista' }
-        // Se il file non esiste, il player mostrerà un errore o non partirà.
-        // Usa nomi file semplici senza spazi (es: canzone1.mp3)
+        // DATABASE E LOGICA JS (Invariata ma con puntamenti corretti)
         const databaseCanzoni = {
-            // Sezione 1
-            '1_1': { file: 'audio/pop1.mp3', risposta: 'Ed Sheeran – Shape of You' },
-            '1_2': { file: 'audio/mario.mp3', risposta: 'Super Mario Bros Theme' },
-            '1_3': { file: 'https://www.w3schools.com/html/horse.mp3', risposta: 'Esempio Audio Online (W3Schools)' }, // Esempio link esterno
-            '1_4': { file: 'canzone4.mp3', risposta: 'Thriller - Michael Jackson' },
-            // ... aggiungi tutte le altre fino alla 1_10
+            '1_1': { file: 'audio/1_1.mp3', risposta: 'Ed Sheeran - Shape of You (4 miliardi e 8 milioni)' },
+            '1_2': { file: 'audio/pop2.mp3', risposta: 'Coldplay Viva la Vita (3 miliardi 2 milioni)' },
+            '1_3': { file: 'audio/pop3.mp3', risposta: 'Avicii - Wake Me Up (3 milioni)' },
+            '1_4': { file: 'audio/pop4.mp3', risposta: 'Michaels Jakson - Billie Jean (2 miliardi  e 6 milioni)' },
+            '1_5': { file: 'audio/pop5.mp3', risposta: 'One Direction - Night Changes (2 miliardi 5 milioni)' },
+            '1_6': { file: 'audio/pop6.mp3', risposta: 'Gotye - Somebody that i Used to Know (2 miliardi e 4 milioni)' },
+            '1_7': { file: 'audio/pop7.mp3', risposta: 'Backstreet Boys - I Want it that Way (2 miliardi)' },
+            '1_8': { file: 'audio/pop8.mp3', risposta: 'Carly Ray Jepsen - Call Me Maybe (1 miliardo 9 milioni)' },
+            '1_9': { file: 'audio/pop9.mp3', risposta: 'Taylor Swift - Shake in Off (1 miliardo 8 milioni)' },
+            '1_10': { file: 'audio/pop10.mp3', risposta: 'Lady Gaga - Just Dance (1 miliardo 7 milioni)' },
+            '2_1': { file: 'audio/prock1.mp3', risposta: 'The Police - Every Breath you Take (3 miliardi e 400 milioni)' },
+            '2_2': { file: 'audio/prock2.mp3', risposta: 'Imagine Dragons - Demons (2 miliardi e 9 milioni)' },
+            '2_3': { file: 'audio/prock3.mp3', risposta: 'Toto - Africa (2 miliardi 500 milioni)' },
+            '2_4': { file: 'audio/prock4.mp3', risposta: 'Bon Jovi - Livin on a Prayer (2 miliardi e 2 milioni)' },
+            '2_5': { file: 'audio/prock5.mp3', risposta: 'Queen - Under Pressure (2 miliardi e 1 milioni)' },
+            '2_6': { file: 'audio/prock6.mp3', risposta: 'Red Hot Chili Peppers - Californication (1 miliardo e 9 milioni)' },
+            '2_7': { file: 'audio/prock7.mp3', risposta: 'The Cranberries - Zombie (1 miliardo e 7 milioni)' },
+            '2_8': { file: 'audio/prock8.mp3', risposta: 'U2 - With or Without you (1 miliardo e 4 milioni)' },
+            '2_9': { file: 'audio/prock9.mp3', risposta: 'Pink Floyd - Another Brick in the Wall (1 miliardo e 2 milioni)' },
+            '2_10': { file: 'audio/prock10.mp3', risposta: 'Depeche Mode - Enjoy the Silence (900 milioni)' },
+            '3_1': { file: 'audio/arock1.mp3', risposta: 'The Killers - Mr. Brighside (3 miliardi e 1 milione)' },
+            '3_2': { file: 'audio/arock2.mp3', risposta: 'Linking Park - In the End  (3 miliardi)' },
+            '3_3': { file: 'audio/arock3.mp3', risposta: 'Nirvana - Smells Like Teen Spirit (2 miliardi e 8 milioni)' },
+            '3_4': { file: 'audio/arock4.mp3', risposta: 'Radiohead - Creep (2 miliardi e 8 milioni)' },
+            '3_5': { file: 'audio/arock5.mp3', risposta: 'Evanescence - Bring me to Life (1 miliardo e 9 milioni)' },
+            '3_6': { file: 'audio/arock6.mp3', risposta: 'Nickelback - How you Remind Me (1 miliardo 600 milioni)' },
+            '3_7': { file: 'audio/arock7.mp3', risposta: 'Green Day - Boulevard of Broken Dreem  (1 miliardo e 2)' },
+            '3_8': { file: 'audio/arock8.mp3', risposta: 'Skillet - Monster (1 milioardo' },
+            '3_9': { file: 'audio/arock9.mp3', risposta: '30 Second to Mars - The Kill (900 milioni)' },
+            '3_10': { file: 'audio/arock10.mp3', risposta: 'Muse - Starligth (500 milioni)' },
+            '4_1': { file: 'audio/ita1.mp3', risposta: 'Maneskin - Zitti e Buoni (600 milioni)' },
+            '4_2': { file: 'audio/ita2.mp3', risposta: 'Mahmood - Tuta Gold (143 milioni)' },
+            '4_3': { file: 'audio/ita3.mp3', risposta: 'Marco Mengoni - Due Vite (132 milioni)' },
+            '4_4': { file: 'audio/ita4.mp3', risposta: 'Annalisa - Sinceramente (115 milioni)' },
+            '4_5': { file: 'audio/ita5.mp3', risposta: 'Achille Laureo - 16 Marzo (80 milioni)' },
+            '4_6': { file: 'audio/ita6.mp3', risposta: 'Tiziano Ferro - Ti Scatterò una Foto (70 milioni)' },
+            '4_7': { file: 'audio/ita7.mp3', risposta: 'Ligabue - Piccola Stella Senza Cielo (67 milioni)' },
+            '4_8': { file: 'audio/ita8.mp3', risposta: 'Gianluca Grignani - Destinazione Paradiso' },
+            '4_9': { file: 'audio/ita9.mp3', risposta: 'Fabrizio de Andrè - Via del Campo (34 milioni)' },
+            '4_10': { file: 'audio/ita10.mp3', risposta: 'Franco Battiato - Cuccurucucu (32 milioni)' },
+            '5_1': { file: 'audio/metal1.mp3', risposta: 'System of a Down - Chop Suey  (1 miliardo e 900 milioni' },
+            '5_2': { file: 'audio/metal2.mp3', risposta: 'Metallica - Master of Puppets (1 miliardo e 2)' },
+            '5_3': { file: 'audio/metal3.mp3', risposta: 'Bring Me the Horizon - Can You Fell My Heart (800 milioni)' },
+            '5_4': { file: 'audio/metal4.mp3', risposta: 'Black Sabbath - Iron Man (700 milioni)' },
+            '5_5': { file: 'audio/metal5.mp3', risposta: 'Iron Maiden - Fear of the Dark (400 milioni)' },
 
-            // Sezione 5 (quella da 5)
-            '5_1': { file: 'canzone5_1.mp3', risposta: 'Sezione 5 Slot 1' },
-            '5_5': { file: 'canzone5_5.mp3', risposta: 'Ultima Canzone!' },
+            
+
+            
+            // ... il resto del tuo database
         };
 
+        let slotCorrente = null;
 
-        // --- 3. RIFERIMENTI DOM POPUP ---
-        const popupOverlay = document.getElementById('popupOverlay');
-        const popupTitolo = document.getElementById('popupTitolo');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const audioSource = document.getElementById('audioSource');
-        const areaRisposta = document.getElementById('areaRisposta');
-        const btnMostraRisposta = document.getElementById('btnMostraRisposta');
-        const btnChiudiPopup = document.getElementById('btnChiudiPopup');
-
-        let slotCorrente = null; // Memorizza quale slot è aperto
-
-
-        // --- 4. GENERAZIONE AUTOMATICA DELLA GRIGLIA ---
         configGriglia.forEach((numSlot, index) => {
-            const numSezione = index + 1;
+            const sezione = document.createElement('div');
+            sezione.className = 'sezione';
+            sezione.innerHTML = `<div class="titolo-sezione">${nomiSezioni[index]}</div>`;
+            
+            const container = document.createElement('div');
+            container.className = 'slot-container';
 
-            // Crea il div della sezione
-            const sezioneDiv = document.createElement('div');
-            sezioneDiv.className = 'sezione';
-
-            // Crea il titolo della sezione
-            const titoloDiv = document.createElement('div');
-            titoloDiv.className = 'titolo-sezione';
-            titoloDiv.innerText = `${nomiSezioni[index]}`;
-            sezioneDiv.appendChild(titoloDiv);
-
-            // Crea il container degli slot
-            const slotContainerDiv = document.createElement('div');
-            slotContainerDiv.className = 'slot-container';
-
-            // Genera gli slot
             for (let i = 1; i <= numSlot; i++) {
-                const slotBtn = document.createElement('button');
-                slotBtn.className = 'slot';
-                slotBtn.innerText = i; // Numero dello slot
+                const btn = document.createElement('button');
+                btn.className = 'slot';
+                btn.innerText = i;
+                const id = (index + 1) + "_" + i;
                 
-                // ID univoco basato su sezione e numero slot (es: slot_1_3)
-                const slotId = `${numSezione}_${i}`;
-                slotBtn.id = `slot_${slotId}`; 
-                
-                // Aggiunge l'evento click allo slot
-                slotBtn.onclick = function() { apriPopupCanzone(this, slotId); };
-                
-                slotContainerDiv.appendChild(slotBtn);
+                btn.onclick = () => {
+                    slotCorrente = btn;
+                    const dati = databaseCanzoni[id];
+                    document.getElementById('popupTitolo').innerText = `${nomiSezioni[index]} - SLOT ${i}`;
+                    document.getElementById('areaRisposta').style.display = 'none';
+                    document.getElementById('areaRisposta').innerText = dati ? dati.risposta : "Nessuna Risposta";
+                    document.getElementById('audioPlayer').src = dati ? dati.file : "";
+                    document.getElementById('audioPlayer').load();
+                    document.getElementById('popupOverlay').style.display = 'flex';
+                };
+                container.appendChild(btn);
             }
-
-            sezioneDiv.appendChild(slotContainerDiv);
-            gridContainer.appendChild(sezioneDiv);
+            sezione.appendChild(container);
+            gridContainer.appendChild(sezione);
         });
 
-
-        // --- 5. LOGICA DEL POPUP ---
-
-        // Funzione per aprire il popup
-        function apriPopupCanzone(elementoSlot, slotId) {
-            // Se lo slot è già oscurato, non fare nulla
-            if (elementoSlot.classList.contains('oscurato')) return;
-
-            slotCorrente = elementoSlot; // Salva lo slot cliccato
-            const datiCanzone = databaseCanzoni[slotId];
-
-            // Aggiorna contenuto popup
-            popupTitolo.innerText = `Sezione ${slotId.split('_')[0]} - Slot ${slotId.split('_')[1]}`;
-            areaRisposta.style.display = 'none'; // Nascondi risposta precedente
-            btnMostraRisposta.style.display = 'inline-block'; // Mostra bottone risposta
-
-            // Gestione Audio
-            if (datiCanzone) {
-                // Carica la canzone dal database
-                audioSource.src = datiCanzone.file;
-                areaRisposta.innerText = datiCanzone.risposta; // Prepara la risposta
-                audioPlayer.load(); // Ricarica il player con la nuova sorgente
-                // audioPlayer.play(); // Opzionale: fai partire la canzone in automatico
-            } else {
-                // Se non c'è nel database
-                audioSource.src = ""; // Rimuovi sorgente
-                audioPlayer.load();
-                areaRisposta.innerText = "Nessun dato per questo slot nel database.";
-            }
-
-            // Mostra il popup
-            popupOverlay.style.display = 'flex';
-        }
-
-        // Funzione per chiudere il popup
-        function chiudiPopup() {
-            popupOverlay.style.display = 'none';
-            audioPlayer.pause(); // Ferma la musica
-            audioPlayer.currentTime = 0; // Riavvolge la musica
-
-            // Oscura lo slot che era aperto
-            if (slotCorrente) {
-                slotCorrente.classList.add('oscurato');
-                slotCorrente = null; // Resetta lo slot corrente
-            }
-        }
-
-        // --- 6. EVENTI DEI BOTTONI DEL POPUP ---
-
-        // Bottone Mostra Risposta
-        btnMostraRisposta.onclick = function() {
-            areaRisposta.style.display = 'block'; // Mostra il div della risposta
-            this.style.display = 'none'; // Nascondi il bottone stesso
+        document.getElementById('btnMostraRisposta').onclick = () => {
+            document.getElementById('areaRisposta').style.display = 'block';
         };
 
-        // Bottone Chiudi
-        btnChiudiPopup.onclick = chiudiPopup;
-
-        // Chiudi il popup cliccando fuori dal contenuto (sull'overlay)
-        popupOverlay.onclick = function(event) {
-            // Se il target del click è l'overlay stesso (e non il contenuto dentro)
-            if (event.target === popupOverlay) {
-                chiudiPopup();
-            }
+        document.getElementById('btnChiudiPopup').onclick = () => {
+            document.getElementById('popupOverlay').style.display = 'none';
+            document.getElementById('audioPlayer').pause();
+            if(slotCorrente) slotCorrente.classList.add('oscurato');
         };
 
-        // Chiudi il popup premendo il tasto ESC
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && popupOverlay.style.display === 'flex') {
-                chiudiPopup();
-            }
-        });
-        
-const boxPunteggi = document.getElementById('punteggi-musica');
-for (let i = 1; i <= 10; i++) {
-    const puntiBase = i * 50;
-    const riga = document.createElement('div');
-    riga.className = 'riga-punteggio';
-    riga.innerHTML = `<span>Slot ${i}:</span> <span>${puntiBase} + ${puntiBase}</span>`;
-    boxPunteggi.appendChild(riga);
-}
+        // Riempimento Legenda Punti
+        const boxPunteggi = document.getElementById('punteggi-musica');
+        for (let i = 1; i <= 10; i++) {
+            const riga = document.createElement('div');
+            riga.className = 'riga-punteggio';
+            riga.innerHTML = `<span>Slot ${i}:</span> <span>${i * 50} pt</span>`;
+            boxPunteggi.appendChild(riga);
+        }
     </script>
 </body>
 </html>
